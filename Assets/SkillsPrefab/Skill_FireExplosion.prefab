@@ -23781,6 +23781,9 @@ GameObject:
   - component: {fileID: 2841360408635590370}
   - component: {fileID: 2839936912292174874}
   - component: {fileID: 2610358355222033698}
+  - component: {fileID: 1598844431389442898}
+  - component: {fileID: -4407869315004829678}
+  - component: {fileID: -7163446925054800632}
   m_Layer: 0
   m_Name: Skill_FireExplosion
   m_TagString: Untagged
@@ -23806,7 +23809,7 @@ Transform:
   - {fileID: 2711337384118118926}
   - {fileID: 2711406918435061044}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &2841360408635590370
 ParticleSystem:
@@ -28640,6 +28643,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OnlyDeactivate: 0
+--- !u!58 &1598844431389442898
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2714533384285546694}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.1
+--- !u!95 &-4407869315004829678
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2714533384285546694}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 985d7f45d0b460c48833be936ff5fb16, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-7163446925054800632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2714533384285546694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08c42c96f4e81e341a0d5aec64705da7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentDamage: 0
 --- !u!1 &2714541468461240840
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,6 +8,7 @@ public class MoveAndExplosion : MonoBehaviour
     public Vector3 MoveToPoint;
     public float SpeedMove, ExplosionDistance;
     public bool IsMove;
+    public int Damage;
 
     private void Update()
     {
@@ -25,15 +26,16 @@ public class MoveAndExplosion : MonoBehaviour
         }
     }
 
-    public void StartMove (Vector3 _endPoint)
+    public void StartMove (Vector3 _endPoint, int _damageSkill)
     {
         IsMove = true;
         MoveToPoint = _endPoint;
+        Damage = _damageSkill;
     }
 
 
     public void SpawnExplosion ()
     {
-        Instantiate(ExplosionGM, transform.position, ExplosionGM.transform.rotation);
+        Instantiate(ExplosionGM, transform.position, ExplosionGM.transform.rotation).GetComponent<TriggerSkillDamage>().SetDataDamage(Damage);
     }
 }

@@ -13,6 +13,8 @@ public class PlayerControl : MonoBehaviour
     public delegate void DeselectSkill();
     public static event DeselectSkill OnDeselectSkill;
 
+    public PlayerAnimatorControl playerAnimatorControl;
+
     void Update()
     {
         RotatePlayer();
@@ -34,6 +36,9 @@ public class PlayerControl : MonoBehaviour
     {
         PlayerTransform.position += Vector3.up * Input.GetAxisRaw("Vertical") * SpeedMove * Time.deltaTime;
         PlayerTransform.position += Vector3.right * Input.GetAxisRaw("Horizontal") * SpeedMove * Time.deltaTime;
+
+        playerAnimatorControl.SetWalk((int)Input.GetAxisRaw("Vertical"));
+
     }
 
     public void RotatePlayer ()

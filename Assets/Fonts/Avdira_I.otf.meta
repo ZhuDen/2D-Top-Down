@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: 2ec51345616efc14489d9b6580e65900
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Avdira
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 63cf892a4c353b14e99961255de5fede, type: 3}
+  - {fileID: 12800000, guid: 1e40541f2f02bf540ac393c65b965a5d, type: 3}
+  - {fileID: 12800000, guid: 77f0f23defe479d4f95e9a9b78526e25, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
