@@ -15,6 +15,12 @@ public class PlayerControl : MonoBehaviour
 
     public PlayerAnimatorControl playerAnimatorControl;
 
+    private void Awake()
+    {
+        CameraTransform = Camera.main.transform;
+        PlayerTransform = this.transform;
+    }
+
     void Update()
     {
         RotatePlayer();
