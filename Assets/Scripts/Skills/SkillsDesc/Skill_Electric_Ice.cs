@@ -10,10 +10,11 @@ public class Skill_Electric_Ice : MonoBehaviour
     public PlayerControl MyPlayerControl;
 
     public Button ButtonSkill;
-    public Text TextCountdown;
+    public Text TextCountdown, TextNeedMana, TextButtonKey;
     public Image ImageFillCountdown, SelectImage;
     public float Multipler, countDown;
     public bool IsReload;
+    public KeyCode MyKeyCode;
 
     void Start()
     {
@@ -29,20 +30,29 @@ public class Skill_Electric_Ice : MonoBehaviour
         MyPlayerControl = GameManager.Instance.MyPlayerControl;
     }
 
+    
+
     private void OnEnable()
     {
         GameManager.OnClickMouse += OnClickMouseUse;
         PlayerControl.OnDeselectSkill += OnDeselectSkill;
+        GetComponent<SkillKeyboard>().OnReplaceKey += OnReplaceKey;
     }
 
     private void OnDisable()
     {
         GameManager.OnClickMouse -= OnClickMouseUse;
         PlayerControl.OnDeselectSkill -= OnDeselectSkill;
+        GetComponent<SkillKeyboard>().OnReplaceKey -= OnReplaceKey;
     }
 
     private void Update()
     {
+        if(Input.GetKeyDown(MyKeyCode))
+        {
+            SelectSkill();
+        }
+
         if (IsReload)
         {
             countDown -= Time.deltaTime;
@@ -58,6 +68,12 @@ public class Skill_Electric_Ice : MonoBehaviour
         }
     }
 
+    public void OnReplaceKey (KeyCode _keyCode)
+    {
+        MyKeyCode = _keyCode;
+        TextButtonKey.text = _keyCode.ToString();
+    }
+
     public void StartReload ()
     {
         IsReload = true;
@@ -67,6 +83,7 @@ public class Skill_Electric_Ice : MonoBehaviour
 
     public void SelectSkill ()
     {
+        if (MyPlayerControl.SelectedSkill == NameSkill) return;
         if (IsReload) return;
         MyPlayerControl.DeselectAllSkills();
         SelectImage.enabled = true;

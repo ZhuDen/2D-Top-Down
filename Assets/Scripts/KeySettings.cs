@@ -6,21 +6,20 @@ using UnityEngine;
 
 public class KeySettings : MonoBehaviour
 {
-    public static KeySettings init;
+    public static KeySettings Instance;
 
     public KeyCode SigKey = KeyCode.G;
 
-    public KeyCode ActionKey_1 = KeyCode.Q;
-    public KeyCode ActionKey_2 = KeyCode.W;
-    public KeyCode ActionKey_3 = KeyCode.E;
-    public KeyCode ActionKey_4 = KeyCode.R;
+    public KeyCode[] ActionKeys;
+
 
     private bool isSettingKey = false;
     private KeyCode bufferkey;
 
     private void Awake()
     {
-        init = this;
+        if(Instance == null)
+            Instance = this;
     }
 
     private void Update()
@@ -35,7 +34,7 @@ public class KeySettings : MonoBehaviour
     {
 
             KeyCode selectedKey = await SetKey();
-            SetActionKey(ref ActionKey_1, selectedKey);
+           // SetActionKey(ref ActionKey_1, selectedKey);
         
     }
 

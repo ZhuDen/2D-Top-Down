@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
+    public GameObject[] MySkills;
     public Transform PlayerTransform, CameraTransform, SpawnSkills;
     public float SpeedRotate, SpeedMove, SpeedCamera;
 
@@ -19,6 +20,11 @@ public class PlayerControl : MonoBehaviour
     {
         CameraTransform = Camera.main.transform;
         PlayerTransform = this.transform;
+    }
+
+    private void Start()
+    {
+        UISpawner.Instance.SpawnSkills(MySkills);
     }
 
     void Update()
