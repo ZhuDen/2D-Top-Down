@@ -15,6 +15,7 @@ public class PlayerControl : MonoBehaviour
     public static event DeselectSkill OnDeselectSkill;
 
     public PlayerAnimatorControl playerAnimatorControl;
+    public PlayerStats playerStats;
 
     private void Awake()
     {

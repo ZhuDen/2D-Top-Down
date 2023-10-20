@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Skill_Electric_Ice : MonoBehaviour
+public class Skill_Control : MonoBehaviour
 {
     public Skills NameSkill;
+    public TypeSkills TypeSkill;
     public SkillsParameters skillsParameters;
-    public GameObject MoveBallGM;
+    public GameObject PrefabSkillGM;
 
     public PlayerControl MyPlayerControl;
 
@@ -22,7 +23,14 @@ public class Skill_Electric_Ice : MonoBehaviour
         Invoke("GetPlayerControl", 0.1f);
         Multipler = 1f / skillsParameters.Countdown;
         countDown = skillsParameters.Countdown;
-        ButtonSkill.onClick.AddListener(SelectSkill);
+
+        if (TypeSkill == TypeSkills.AmedByPoint)
+            ButtonSkill.onClick.AddListener(SelectSkill);
+
+        if (TypeSkill == TypeSkills.NonDirectional)
+            ButtonSkill.onClick.AddListener(OnClickUseNonDirectionalSkill);
+
+        TextNeedMana.text = skillsParameters.NeedMana.ToString();
     }
 
     public void GetPlayerControl ()
@@ -84,26 +92,70 @@ public class Skill_Electric_Ice : MonoBehaviour
     public void SelectSkill ()
     {
         if (MyPlayerControl.SelectedSkill == NameSkill) return;
-        if (IsReload) return;
-        MyPlayerControl.DeselectAllSkills();
-        SelectImage.enabled = true;
-        MyPlayerControl.SelectedSkill = NameSkill;
+
+        if (TypeSkill == TypeSkills.AmedByPoint)
+        {
+            MyPlayerControl.DeselectAllSkills();
+            SelectImage.enabled = true;
+            MyPlayerControl.SelectedSkill = NameSkill;
+        }
+        if (TypeSkill == TypeSkills.NonDirectional)
+        {
+            OnClickUseNonDirectionalSkill();
+        }
+        //  if (IsReload) return;
+      
     }
 
 
     private void OnClickMouseUse()
     {
-        if (IsReload) return;
         if (MyPlayerControl.SelectedSkill == NameSkill)
         {
-            MyPlayerControl.playerAnimatorControl.SetElectricSkill();
-            Vector2 posMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            GameObject ball = Instantiate(MoveBallGM, MyPlayerControl.SpawnSkills.position, MoveBallGM.transform.rotation);
-            ball.GetComponent<MoveAndExplosion>().StartMove(new Vector3(posMouse.x, posMouse.y, 0), Random.Range(skillsParameters.DamageMin, skillsParameters.DamageMax));
-            StartReload();
+            if (TypeSkill == TypeSkills.AmedByPoint)
+            {
+                SpawnSkill();
+            }
         }
     }
 
+    public void OnClickUseNonDirectionalSkill ()
+    {
+        SpawnSkill();
+    }
+
+    public void SpawnSkill ()
+    {
+        if (IsReload)
+        {
+            UISpawner.Instance.SpawnTipReloadSkill();
+            return;
+        }
+
+        if (MyPlayerControl.playerStats.Mana < skillsParameters.NeedMana)
+        {
+            UISpawner.Instance.SpawnTipNeedMana();
+            return;
+        }
+        else
+        {
+            MyPlayerControl.playerStats.UpdateMana(skillsParameters.NeedMana, PlayerStats.TypeSummation.Minus);
+        }
+
+        if (TypeSkill == TypeSkills.AmedByPoint)
+        {
+            MyPlayerControl.playerAnimatorControl.SetElectricSkill();
+            Vector2 posMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            GameObject skill = Instantiate(PrefabSkillGM, MyPlayerControl.SpawnSkills.position, PrefabSkillGM.transform.rotation);
+            skill.GetComponent<MoveAndExplosion>().StartMove(new Vector3(posMouse.x, posMouse.y, 0), Random.Range(skillsParameters.DamageMin, skillsParameters.DamageMax));
+        }
+        if(TypeSkill == TypeSkills.NonDirectional)
+        {
+            GameObject skill = Instantiate(PrefabSkillGM, MyPlayerControl.transform.position, PrefabSkillGM.transform.rotation);
+            MyPlayerControl.transform.position = new Vector3(MyPlayerControl.transform.position.x + Random.Range(-8f, 8f), MyPlayerControl.transform.position.y + Random.Range(-8f, 8f), 0);
+        }
+        StartReload();
+    }
 
     private void OnDeselectSkill()
     {

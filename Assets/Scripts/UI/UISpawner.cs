@@ -1,11 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 
 public class UISpawner : MonoBehaviour
 {
     public static UISpawner Instance;
-    public Transform ParentSkills;
+    public Transform ParentSkills, ParentTips;
+
+    public Text TextCountHP, TextCountMana;
+    public Text TextRegenHP, TextRegenMana;
+    public Image ImageFillHP, ImageFillMana;
+
+    public GameObject TipsReloadGM, TipsNeedMana;
+    public bool IsReloadTips;
 
     private void Awake()
     {
@@ -21,5 +28,28 @@ public class UISpawner : MonoBehaviour
             skill.GetComponent<SkillKeyboard>().OnSetKey(KeySettings.Instance.ActionKeys[i]);
         }
 
+    }
+
+    public void SpawnTipReloadSkill ()
+    {
+        if (IsReloadTips) return;
+        IsReloadTips = true;
+        GameObject tip = Instantiate(TipsReloadGM, ParentTips);
+        tip.transform.DOPunchScale(new Vector3(0.2f, 0.2f, 0f), 0.3f, 1, 0);
+        Invoke("ReloadTips", 1.6f);
+    }
+
+    public void SpawnTipNeedMana()
+    {
+        if (IsReloadTips) return;
+        IsReloadTips = true;
+        GameObject tip = Instantiate(TipsNeedMana, ParentTips);
+        tip.transform.DOPunchScale(new Vector3(0.2f, 0.2f, 0f), 0.3f, 1, 0);
+        Invoke("ReloadTips", 1.6f);
+    }
+
+    public void ReloadTips ()
+    {
+        IsReloadTips = false;
     }
 }
