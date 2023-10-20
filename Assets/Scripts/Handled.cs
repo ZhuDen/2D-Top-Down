@@ -7,9 +7,16 @@ using GameLibrary.Common;
 using GameLibrary.Extension;
 using Mono;
 using System;
+using UnityEngine.SceneManagement;
 
 public static class Handled 
 {
+    public delegate void GetMessage(Vector3 pos);
+    public static event GetMessage OnGetMessage;
+
+    public delegate void Autorized();
+    public static event Autorized OnAutorized;
+
     static Client Client = null;
     public static void HandleReceivedData(DataPacket packet)
     {
@@ -29,17 +36,19 @@ public static class Handled
 
                 if (packet.Data[ParameterCode.Message].ToString() == "Success")
                 {
-                   /* MainSystem.instance.ClientData.Name = packet.Data[ParameterCode.Name].ToString();
-                    MainSystem.instance.ClientData.ID = packet.Data[ParameterCode.Id].ToString();
-                    MainSystem.instance.ClientData.Icon = packet.Data[ParameterCode.IconIndex].ToString();
-                    MainSystem.instance.ClientData.Lvl = packet.Data[ParameterCode.LVL].ToString();
-                    MainSystem.instance.ClientData.Exp = packet.Data[ParameterCode.Exp].ToString();
-                    MainSystem.instance.doMainThread(() => UIManager.Instance.Name.text = MainSystem.instance.ClientData.Name);
-                    MainSystem.instance.doMainThread(() => UIManager.Instance.UUID.text = "UUID: " + MainSystem.instance.ClientData.ID);
-                    MainSystem.instance.doMainThread(() => UIManager.Instance.Exp.text = MainSystem.instance.ClientData.Exp);
-                    MainSystem.instance.doMainThread(() => UIManager.Instance.Lvl.text = MainSystem.instance.ClientData.Lvl);
-                    MainSystem.instance.doMainThread(() => UIManager.Instance.Icon.sprite = UIManager.Instance.IconData.Icon[Convert.ToInt32(MainSystem.instance.ClientData.Icon)].Image);
-                    MainSystem.instance.doMainThread(() => UIManager.Instance.State.SwitchToPanel("AuthGood"));*/
+
+                    OnAutorized?.Invoke();
+                    /* MainSystem.instance.ClientData.Name = packet.Data[ParameterCode.Name].ToString();
+                     MainSystem.instance.ClientData.ID = packet.Data[ParameterCode.Id].ToString();
+                     MainSystem.instance.ClientData.Icon = packet.Data[ParameterCode.IconIndex].ToString();
+                     MainSystem.instance.ClientData.Lvl = packet.Data[ParameterCode.LVL].ToString();
+                     MainSystem.instance.ClientData.Exp = packet.Data[ParameterCode.Exp].ToString();
+                     MainSystem.instance.doMainThread(() => UIManager.Instance.Name.text = MainSystem.instance.ClientData.Name);
+                     MainSystem.instance.doMainThread(() => UIManager.Instance.UUID.text = "UUID: " + MainSystem.instance.ClientData.ID);
+                     MainSystem.instance.doMainThread(() => UIManager.Instance.Exp.text = MainSystem.instance.ClientData.Exp);
+                     MainSystem.instance.doMainThread(() => UIManager.Instance.Lvl.text = MainSystem.instance.ClientData.Lvl);
+                     MainSystem.instance.doMainThread(() => UIManager.Instance.Icon.sprite = UIManager.Instance.IconData.Icon[Convert.ToInt32(MainSystem.instance.ClientData.Icon)].Image);
+                     MainSystem.instance.doMainThread(() => UIManager.Instance.State.SwitchToPanel("AuthGood"));*/
 
                     Debug.Log($" Lvl: {MainSystem.instance.ClientData.Lvl}");
                     Debug.Log($"Authorisation {packet.Data[ParameterCode.Name].ToString()}") ;
@@ -88,7 +97,9 @@ public static class Handled
                 if (packet.Data != null)
                 {
                     SendScript.Instance.Return++;
-                    string message = (string)packet.Data[ParameterCode.Message];
+                    //TestSend ss = new TestSend();
+                    float message = (float)packet.Data[ParameterCode.Message];
+                  //  OnGetMessage?.Invoke(message);
                     Debug.Log($"Received message: {message} ");
                 }
                 else {
@@ -98,6 +109,10 @@ public static class Handled
 
             case OperationCode.Connect:
                 Debug.Log($"Connected: {packet.Data[ParameterCode.Message].ToString()}");
+                //MainSystem.instance.ClientData.ID = packet.Data[ParameterCode.Id].ToString();
+                break;
+            case OperationCode.MyTransform:
+                OnGetMessage?.Invoke(new Vector3(float.Parse(packet.Data[ParameterCode.X].ToString()), float.Parse(packet.Data[ParameterCode.Y].ToString()), float.Parse(packet.Data[ParameterCode.Z].ToString())));
                 //MainSystem.instance.ClientData.ID = packet.Data[ParameterCode.Id].ToString();
                 break;
 

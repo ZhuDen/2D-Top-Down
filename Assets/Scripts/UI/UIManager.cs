@@ -1,19 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; set; }
 
-    public UnityEngine.UI.InputField LoginUI;
-    public UnityEngine.UI.InputField PasswordUI;
-    public UnityEngine.UI.InputField NameUI;
-    public UnityEngine.UI.Text Name;
-    public UnityEngine.UI.Text UUID;
-    public UnityEngine.UI.Text Lvl;
-    public UnityEngine.UI.Text Exp;
-    public UnityEngine.UI.Image Icon;
+    public InputField LoginUI;
+    public InputField PasswordUI;
+    public InputField NameUI;
+    public Text Name;
+    public Text UUID;
+    public Text Lvl;
+    public Text Exp;
+    public Image Icon;
     public UIStateManager State;
     public IconData IconData;
 

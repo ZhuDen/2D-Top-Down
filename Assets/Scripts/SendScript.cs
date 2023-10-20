@@ -64,20 +64,7 @@ public class SendScript : MonoBehaviour
             Uptime = k.ToString("0.######## ms");
 
             SendMess();
-            SendMess();
-            SendMess();
-            SendMess();
-            SendMess();
-            SendMess();
-            SendMess();
-            SendMess();
-            SendMess();
-            SendMess();
-            SendMess();
-            SendMess();
-            SendMess();
-            SendMess();
-            SendMess();
+
 
         }
 

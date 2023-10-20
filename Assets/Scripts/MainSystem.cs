@@ -13,11 +13,25 @@ public class MainSystem : MonoBehaviour
     public string Name;
     public string UUID;
     public ClientData ClientData;
+
+    internal void doMainThread(object v)
+    {
+        throw new NotImplementedException();
+    }
+
     public SynchronizationContext _MainThread;
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         ClientData = new ClientData();
         _MainThread = SynchronizationContext.Current;
     }
@@ -25,6 +39,8 @@ public class MainSystem : MonoBehaviour
     private void Start()
     {
         Autorisation("Admin" , "Admin");
+
+       
     }
 
     public void Autorisation(string Login, string Pass)
