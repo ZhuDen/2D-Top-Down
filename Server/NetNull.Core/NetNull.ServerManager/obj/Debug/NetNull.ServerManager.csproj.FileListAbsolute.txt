@@ -1,0 +1,9 @@
+D:\Cod Project\Shot\Server\NetNull.Core\NetNull.ServerManager\bin\Debug\NetNull.ServerManager.exe
+D:\Cod Project\Shot\Server\NetNull.Core\NetNull.ServerManager\bin\Debug\NetNull.ServerManager.pdb
+D:\Cod Project\Shot\Server\NetNull.Core\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.csproj.AssemblyReference.cache
+D:\Cod Project\Shot\Server\NetNull.Core\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.Properties.Resources.resources
+D:\Cod Project\Shot\Server\NetNull.Core\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.csproj.GenerateResource.cache
+D:\Cod Project\Shot\Server\NetNull.Core\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.csproj.CoreCompileInputs.cache
+D:\Cod Project\Shot\Server\NetNull.Core\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.exe
+D:\Cod Project\Shot\Server\NetNull.Core\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.pdb
+D:\Cod Project\Shot\Server\NetNull.Core\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.ServerManager.resources

@@ -1,0 +1,8 @@
+D:\Cod Project\NetNull\NetNull.Core\Client\Assets\Plugins\Release\GameLibrary.deps.json
+D:\Cod Project\NetNull\NetNull.Core\Client\Assets\Plugins\Release\GameLibrary.dll
+D:\Cod Project\NetNull\NetNull.Core\GameLibrary\obj\Release\GameLibrary.GeneratedMSBuildEditorConfig.editorconfig
+D:\Cod Project\NetNull\NetNull.Core\GameLibrary\obj\Release\GameLibrary.AssemblyInfoInputs.cache
+D:\Cod Project\NetNull\NetNull.Core\GameLibrary\obj\Release\GameLibrary.AssemblyInfo.cs
+D:\Cod Project\NetNull\NetNull.Core\GameLibrary\obj\Release\GameLibrary.csproj.CoreCompileInputs.cache
+D:\Cod Project\NetNull\NetNull.Core\GameLibrary\obj\Release\GameLibrary.dll
+D:\Cod Project\NetNull\NetNull.Core\GameLibrary\obj\Release\GameLibrary.csproj.AssemblyReference.cache
