@@ -14,6 +14,8 @@ public class UISpawner : MonoBehaviour
     public GameObject TipsReloadGM, TipsNeedMana;
     public bool IsReloadTips;
 
+    public Image ImageIconCharacter;
+
     private void Awake()
     {
         if (Instance == null)
@@ -51,5 +53,11 @@ public class UISpawner : MonoBehaviour
     public void ReloadTips ()
     {
         IsReloadTips = false;
+    }
+
+    public void SetIconCharacter (Sprite _icon)
+    {
+        ImageIconCharacter.sprite = _icon;
+        ImageIconCharacter.enabled = true;
     }
 }

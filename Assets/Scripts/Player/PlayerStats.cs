@@ -8,6 +8,8 @@ public class PlayerStats : MonoBehaviour
         Plus,
         Minus
     }
+
+    public Sprite MyIcon;
     public int MaxHP, MaxMana;
 
     private int CountHP, CountMana;
@@ -48,6 +50,8 @@ public class PlayerStats : MonoBehaviour
 
         UpdatedMultiplers();
         UpdateUIStats();
+
+        UISpawner.Instance.SetIconCharacter(MyIcon);
     }
 
     private void Update()

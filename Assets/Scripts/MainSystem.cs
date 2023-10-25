@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 using GameLibrary.Extension;
 
 public class MainSystem : MonoBehaviour
@@ -13,6 +14,8 @@ public class MainSystem : MonoBehaviour
     public string Name;
     public string UUID;
     public ClientData ClientData;
+
+    public InputField LogingField, PaswordField;
 
     internal void doMainThread(object v)
     {
@@ -41,6 +44,16 @@ public class MainSystem : MonoBehaviour
         Autorisation("Admin" , "Admin");
 
        
+    }
+
+    public void ClickButAutorisation()
+    {
+        Autorisation(LogingField.text, PaswordField.text);
+    }
+
+    public void ClickButRegistration ()
+    {
+        Registration(LogingField.text, PaswordField.text, "Den");
     }
 
     public void Autorisation(string Login, string Pass)

@@ -30,12 +30,14 @@ public class ggwp : MonoBehaviour
     {
 
         Handled.OnAutorized += LoadGame;
+        Handled.OnConnected += OnConnected;
     }
 
    
     private void OnDisable()
     {
         Handled.OnAutorized -= LoadGame;
+        Handled.OnConnected -= OnConnected;
     }
 
     private void Handled_OnGetMessage(string message)
@@ -43,4 +45,8 @@ public class ggwp : MonoBehaviour
         Debug.Log($"Я получил и сделаль: {message}");
     }
 
+    private void OnConnected()
+    {
+       // GameObject.Find("Canvas").SetActive(false);
+    }
 }

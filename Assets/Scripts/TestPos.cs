@@ -12,12 +12,14 @@ public class TestPos : MonoBehaviour
     {
         GameManager.OnTransUpdate += OnServerSinc;
         Handled.OnGetMessage += OnGetPos;
+
     }
 
     private void OnDisable()
     {
         GameManager.OnTransUpdate -= OnServerSinc;
         Handled.OnGetMessage -= OnGetPos;
+   
     }
 
     private void OnServerSinc()
@@ -38,14 +40,16 @@ public class TestPos : MonoBehaviour
         }
     }
 
-async void SendMess()
+    async void SendMess()
     {
-        await TransportHandler.Transport.SendTo(new DataPacket(OperationCode.MyTransform, new Dictionary<ParameterCode, object> { { ParameterCode.X, transform.position.x }, { ParameterCode.Y, transform.position.y }, { ParameterCode.Z, 0 } }));
+        await TransportHandler.Transport.SendTo(new DataPacket(OperationCode.MyTransform, new Dictionary<ParameterCode, object> { { ParameterCode.X, transform.position.x }, { ParameterCode.Y, transform.position.y }, { ParameterCode.Z, 0 } }, SendClientFlag.All));
     }
 
     private void OnGetPos(Vector3 pos)
     {
-        MainSystem.instance.doMainThread(() => NewPos = pos);
-        //Debug.Log($"Я получил и сделаль: {pos}");
+        NewPos = pos;
+        Debug.Log("dfssfd");
     }
+
+    
 }
