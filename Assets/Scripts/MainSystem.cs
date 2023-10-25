@@ -14,6 +14,7 @@ public class MainSystem : MonoBehaviour
     public string Name;
     public string UUID;
     public ClientData ClientData;
+    public Room MyRoom;
 
     public InputField LogingField, PaswordField;
 

@@ -271,13 +271,13 @@ public class CommandHandler
                     }
                     break;
 
-                case OperationCode.GetAllRoom:
+                case OperationCode.GetInfoRoom:
 
                     Logger.Log.Debug("GetAllRoom");
                     Logger.Log.Debug($"RoomUUID{World.Instance.Players[_client.Id].TeamUUID}");
                     Logger.Log.Debug($"RoomCount{World.Instance.Rooms.Count}");
                     Logger.Log.Debug($"GetAllRoom{World.Instance.GetRoom(World.Instance.Players[_client.Id].TeamUUID).UUID}");
-                    await SendTo(new DataPacket(OperationCode.GetAllRoom, new Dictionary<ParameterCode, object>
+                    await SendTo(new DataPacket(OperationCode.GetInfoRoom, new Dictionary<ParameterCode, object>
                                         {
                                             { ParameterCode.TeamMember,  World.Instance.GetRoom(World.Instance.Players[_client.Id].TeamUUID)},
                                         }), packet.Flag);
@@ -296,7 +296,8 @@ public class CommandHandler
                                         {
                                             { ParameterCode.X, packet.Data[ParameterCode.X] },
                                             { ParameterCode.Y, packet.Data[ParameterCode.Y] },
-                                            { ParameterCode.Z, packet.Data[ParameterCode.Z] }
+                                            { ParameterCode.Z, packet.Data[ParameterCode.Z] },
+                                            { ParameterCode.Id, packet.Data[ParameterCode.Id] }
                                         }), packet.Flag);
                     
 

@@ -42,7 +42,7 @@ public class TestPos : MonoBehaviour
 
     async void SendMess()
     {
-        await TransportHandler.Transport.SendTo(new DataPacket(OperationCode.MyTransform, new Dictionary<ParameterCode, object> { { ParameterCode.X, transform.position.x }, { ParameterCode.Y, transform.position.y }, { ParameterCode.Z, 0 } }, SendClientFlag.All));
+        await TransportHandler.Transport.SendTo(new DataPacket(OperationCode.MyTransform, new Dictionary<ParameterCode, object> { { ParameterCode.X, transform.position.x }, { ParameterCode.Y, transform.position.y }, { ParameterCode.Z, 0 }, { ParameterCode.Id, TransportHandler.Transport.Id } }, SendClientFlag.All));
     }
 
     private void OnGetPos(Vector3 pos)

@@ -118,11 +118,30 @@ public static class Handled
 
                 break;
             case OperationCode.SetTeam:
-                TransportHandler.Transport.SendTo(new DataPacket(OperationCode.GetAllRoom, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Update" } }, SendClientFlag.Me));
+                TransportHandler.Transport.SendTo(new DataPacket(OperationCode.GetInfoRoom, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Update" } }, SendClientFlag.Me));
 
                 break;
-            case OperationCode.GetAllRoom:
-                Debug.Log($"UUID {((Room)packet.Data[ParameterCode.TeamMember]).Team[0].netClient.Id}" );
+            case OperationCode.GetInfoRoom:
+                Debug.Log($"UUID {((Room)packet.Data[ParameterCode.TeamMember]).Team[0].netClient.Id}");
+
+                if (MainSystem.instance.MyRoom != null)
+                {
+                    if (((Room)packet.Data[ParameterCode.TeamMember]).UUID == MainSystem.instance.MyRoom.UUID)
+                    {
+                        MainSystem.instance.MyRoom = (Room)packet.Data[ParameterCode.TeamMember];
+                    }
+                }
+                else
+                {
+                    MainSystem.instance.MyRoom = (Room)packet.Data[ParameterCode.TeamMember];
+
+                    foreach (TeamMember member in ((Room)packet.Data[ParameterCode.TeamMember]).Team)
+                    {
+
+                        //GameObject.Instantiate(member);
+                    }
+                }
+                
 
                 break;
             case OperationCode.MyTransform:

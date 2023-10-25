@@ -24,6 +24,6 @@ namespace GameLibrary.Common
         Registration,
         SetTeam,
         GetTeam,
-        GetAllRoom,
+        GetInfoRoom,
     }
 }
