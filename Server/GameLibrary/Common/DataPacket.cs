@@ -12,7 +12,11 @@ namespace GameLibrary.Common
 
     [DataContract]
     [KnownType(typeof(ClientData))]
+    [KnownType(typeof(TeamMember))]
+    [KnownType(typeof(NetClient))]
     [KnownType(typeof(NetTransform))]
+    [KnownType(typeof(Room))]
+    [KnownType(typeof(List<TeamMember>))]
     [KnownType(typeof(System.Byte[]))]
     public class DataPacket
     {

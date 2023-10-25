@@ -16,7 +16,7 @@ namespace Server.Elements
         public ConcurrentDictionary<string, NetClient> Players;
         //public ConcurrentDictionary<string, Player> Players => players;
 
-        private ConcurrentDictionary<string, Room> Rooms = new ConcurrentDictionary<string, Room>();
+        public ConcurrentDictionary<string, Room> Rooms;
 
 
         //Rooms 
@@ -26,8 +26,11 @@ namespace Server.Elements
             try
             {
                 Room room = new Room();
+                room.Team = new List<TeamMember>();
                 room.UUID = await NetId.Generate();
+                Logger.Log.Debug($"RoomUUID: {room.UUID}");
                 Rooms.TryAdd(room.UUID, room);
+                Logger.Log.Debug($"RoomCount: {Rooms.Count}");
                 return room.UUID;
             }
             catch (Exception ex)
@@ -53,34 +56,38 @@ namespace Server.Elements
         }
 
         // Ищет, создает, добавляет и вообще надо юзать когда игрок ищет пачку
-        public string FindRoomForMember(NetClient Member) {
+        public string FindRoomForMember(string MemberUUID) {
 
             try
             {
 
                 bool found = false;
-
-                foreach (var room in Rooms)
+                if (Rooms.Count > 0)
                 {
-
-                    if (room.Value.GetTeamCount() > 0)
+                    foreach (var room in Rooms)
                     {
 
-                        room.Value.AddTeamMember(Member); // само блять все сделается, я уже запутался
-                        found = true;
-                        return room.Key;
-                    }
+                        if (room.Value.GetTeamCount() > 0)
+                        {
 
+                            room.Value.AddTeamMember(Players[MemberUUID]); // само блять все сделается, я уже запутался
+                            found = true;
+                            return room.Key;
+                        }
+
+                    }
                 }
                 if (found == false)
                 {
+                    Logger.Log.Debug("Createroom");
                     string bufferRoomUUID = CreateRoom().Result;
-                    Rooms[bufferRoomUUID].AddTeamMember(Member);
+                    Rooms[bufferRoomUUID].AddTeamMember(Players[MemberUUID]);
+                    Logger.Log.Debug($"UnderCreateRoom: {bufferRoomUUID}");
                     return bufferRoomUUID;
                 }
                 return "0";
             }
-            catch (Exception ex) { return "0";}
+            catch (Exception ex) { return "Error 0";}
         }
 
 

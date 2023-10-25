@@ -271,6 +271,18 @@ public class CommandHandler
                     }
                     break;
 
+                case OperationCode.GetAllRoom:
+
+                    Logger.Log.Debug("GetAllRoom");
+                    Logger.Log.Debug($"RoomUUID{World.Instance.Players[_client.Id].TeamUUID}");
+                    Logger.Log.Debug($"RoomCount{World.Instance.Rooms.Count}");
+                    Logger.Log.Debug($"GetAllRoom{World.Instance.GetRoom(World.Instance.Players[_client.Id].TeamUUID).UUID}");
+                    await SendTo(new DataPacket(OperationCode.GetAllRoom, new Dictionary<ParameterCode, object>
+                                        {
+                                            { ParameterCode.TeamMember,  World.Instance.GetRoom(World.Instance.Players[_client.Id].TeamUUID)},
+                                        }), packet.Flag);
+
+                    break;
 
                 case OperationCode.MyTransform:
 
@@ -292,18 +304,27 @@ public class CommandHandler
 
                     //Добавляемся в новую тиму соло
                 case OperationCode.SetTeam:
-                    
-                    //Если группа уже есть, то выходим
-                    if (World.Instance.getClient(_client.Id).TeamUUID != null) {
 
-                        World.Instance.GetRoom(World.Instance.getClient(_client.Id).TeamUUID).RemoveUser(_client.Id);
+                    Logger.Log.Debug("Setteam");
+                    //Если группа уже есть, то выходим
+                    if (World.Instance.Players[_client.Id].TeamUUID != "0" && World.Instance.Players[_client.Id].TeamUUID != null && World.Instance.Players[_client.Id].TeamUUID != "") {
+                        Logger.Log.Debug($"Deleteteam{World.Instance.Players[_client.Id].TeamUUID}");
+                        try
+                        {
+                            World.Instance.Rooms[World.Instance.Players[_client.Id].TeamUUID].RemoveUser(_client.Id);
+                        }
+                        catch (Exception ex) { }
                     }
                     //заходим в новую
-                    World.Instance.getClient(_client.Id).TeamUUID = World.Instance.FindRoomForMember(client);
-                    
+                    Logger.Log.Debug($"TeamSetMyUUID{_client.Id}");
+                    World.Instance.Players[_client.Id].TeamUUID = World.Instance.FindRoomForMember(_client.Id);
+                    _client.TeamUUID = World.Instance.Players[_client.Id].TeamUUID;
+                    Logger.Log.Debug($"TeamSetTeamUUID{_client.TeamUUID}");
+                    Logger.Log.Debug($"TeamSetMyUUID{_client.Id}");
+                    Logger.Log.Debug("AddNewteam");
                     await SendTo(new DataPacket(OperationCode.SetTeam, new Dictionary<ParameterCode, object>
                                         {
-                                            { ParameterCode.TeamUUID, World.Instance.getClient(_client.Id).TeamUUID }
+                                            { ParameterCode.TeamUUID, World.Instance.Players[_client.Id].TeamUUID }
                                         }), packet.Flag);
                     break;
 
@@ -329,26 +350,6 @@ public class CommandHandler
         }
     }
 
-    /*public async Task SendTo(NetClient[] clients, DataPacket Packet)
-    {
-        try
-        {
-            foreach (NetClient client in clients)
-            await client.Socket.SendAsync(await Serializer.SerializeAsync(Packet), SocketFlags.None);
-        }
-        catch (SocketException ex)
-        {
-            Logger.Log.Debug($"SocketException occurred while sending data to: {ex.SocketErrorCode}");
-        }
-        catch (IOException ex)
-        {
-            Logger.Log.Debug($"IOException occurred while sending data to: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Logger.Log.Debug($"Error occurred while sending data to: {ex.Message}");
-        }
-    }*/
     public async Task SendTo(NetClient client, DataPacket packet)
     {
         try
@@ -379,25 +380,7 @@ public class CommandHandler
             Logger.Log.Debug($"Error occurred while sending data: {ex.Message}");
         }
     }
-   /* public async Task SendTo(DataPacket Packet)
-    {
-        try
-        {
-            await _client.Socket.SendAsync(await Serializer.SerializeAsync(Packet), SocketFlags.None);
-        }
-        catch (SocketException ex)
-        {
-            Logger.Log.Debug($"SocketException occurred while sending data to {_client.Id}: {ex.SocketErrorCode}");
-        }
-        catch (IOException ex)
-        {
-            Logger.Log.Debug($"IOException occurred while sending data to {_client.Id}: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Logger.Log.Debug($"Error occurred while sending data to {_client.Id}: {ex.Message}");
-        }
-    }*/
+   
 
     public async Task SendTo( DataPacket packet, SendClientFlag Flag = SendClientFlag.Me)
     {
@@ -464,7 +447,7 @@ public class CommandHandler
                     byte[] sizeBytes = BitConverter.GetBytes(serializedPacket.Length);
                     byte[] buffer = sizeBytes.Concat(serializedPacket).ToArray();
 
-                    foreach (TeamMember client in World.Instance.GetRoom(_client.TeamUUID).Team.Values)
+                    foreach (TeamMember client in World.Instance.GetRoom(_client.TeamUUID).Team)
                     {
                         await client.netClient.Socket.SendAsync(buffer, SocketFlags.None);
                     }
@@ -492,7 +475,7 @@ public class CommandHandler
                     byte[] sizeBytes = BitConverter.GetBytes(serializedPacket.Length);
                     byte[] buffer = sizeBytes.Concat(serializedPacket).ToArray();
 
-                    foreach (TeamMember client in World.Instance.GetRoom(_client.TeamUUID).Team.Values)
+                    foreach (TeamMember client in World.Instance.GetRoom(_client.TeamUUID).Team)
                     {
                         if(client.Team == _client.Team)
                         await client.netClient.Socket.SendAsync(buffer, SocketFlags.None);
@@ -514,92 +497,6 @@ public class CommandHandler
                 break;
         }
 
-
-   /* public async Task SendTo(DataPacket Packet, SendClientFlag Flag = SendClientFlag.Me)
-    {
-
-        if (Flag == SendClientFlag.Me) 
-        {
-            Logger.Log.Debug($"Me {World.Instance.getClient(_client.Id).Id}");
-            await _client.Socket.SendAsync(await Serializer.SerializeAsync(Packet), SocketFlags.None);
-        }
-
-        switch (Flag) {
-
-            case SendClientFlag.Me:
-
-                try
-                {
-                    //Logger.Log.Debug($"Me {World.Instance.getClient(_client.Id).Id}");
-                    await _client.Socket.SendAsync(await Serializer.SerializeAsync(Packet), SocketFlags.None);
-                }
-                catch (SocketException ex)
-                {
-                    Logger.Log.Debug($"SocketException occurred while sending data to {_client.Id}: {ex.SocketErrorCode}");
-                }
-                catch (IOException ex)
-                {
-                    Logger.Log.Debug($"IOException occurred while sending data to {_client.Id}: {ex.Message}");
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log.Debug($"Error occurred while sending data to {_client.Id}: {ex.Message}");
-                }
-
-                break;
-
-            case SendClientFlag.All:
-
-                try
-                {
-                    Logger.Log.Debug("All");
-                    List<NetClient> clients = World.Instance.AllWorldClients();
-
-                    foreach (NetClient client in clients)
-                    {
-                        await client.Socket.SendAsync(await Serializer.SerializeAsync(Packet), SocketFlags.None);
-                    }
-                }
-                catch (SocketException ex)
-                {
-                    Logger.Log.Debug($"SocketException occurred while sending data to {_client.Id}: {ex.SocketErrorCode}");
-                }
-                catch (IOException ex)
-                {
-                    Logger.Log.Debug($"IOException occurred while sending data to {_client.Id}: {ex.Message}");
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log.Debug($"Error occurred while sending data to {_client.Id}: {ex.Message}");
-                }
-
-                break;
-
-        }
-
-        */
     }
 
-    public async Task SendTo(List<NetClient> clients, DataPacket Packet)
-    {
-        try
-        {
-            foreach (NetClient client in clients)
-            {
-                await client.Socket.SendAsync(await Serializer.SerializeAsync(Packet), SocketFlags.None);
-            }
-        }
-        catch (SocketException ex)
-        {
-            Logger.Log.Debug($"SocketException occurred while sending data: {ex.SocketErrorCode}");
-        }
-        catch (IOException ex)
-        {
-            Logger.Log.Debug($"IOException occurred while sending data: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Logger.Log.Debug($"Error occurred while sending data: {ex.Message}");
-        }
-    }
 }

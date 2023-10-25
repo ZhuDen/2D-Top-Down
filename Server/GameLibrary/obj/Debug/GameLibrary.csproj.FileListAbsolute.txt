@@ -24,7 +24,6 @@ D:\Unity Projects\2D-Top-Down\ServerFolder\GameLibrary\obj\Debug\GameLibrary.csp
 D:\Unity Projects\2D-Top-Down\ServerFolder\GameLibrary\obj\Debug\GameLibrary.dll
 D:\Unity Projects\2D-Top-Down\Server\Assets\Plugins\Debug\GameLibrary.deps.json
 D:\Unity Projects\2D-Top-Down\Server\Assets\Plugins\Debug\GameLibrary.dll
-D:\Unity Projects\2D-Top-Down\Server\GameLibrary\obj\Debug\GameLibrary.csproj.AssemblyReference.cache
 D:\Unity Projects\2D-Top-Down\Server\GameLibrary\obj\Debug\GameLibrary.GeneratedMSBuildEditorConfig.editorconfig
 D:\Unity Projects\2D-Top-Down\Server\GameLibrary\obj\Debug\GameLibrary.AssemblyInfoInputs.cache
 D:\Unity Projects\2D-Top-Down\Server\GameLibrary\obj\Debug\GameLibrary.AssemblyInfo.cs
@@ -32,3 +31,4 @@ D:\Unity Projects\2D-Top-Down\Server\GameLibrary\obj\Debug\GameLibrary.csproj.Co
 D:\Unity Projects\2D-Top-Down\Server\GameLibrary\obj\Debug\GameLibrary.dll
 D:\Unity Projects\2D-Top-Down\Assets\Plugins\Debug\GameLibrary.deps.json
 D:\Unity Projects\2D-Top-Down\Assets\Plugins\Debug\GameLibrary.dll
+D:\Unity Projects\2D-Top-Down\Server\GameLibrary\obj\Debug\GameLibrary.csproj.AssemblyReference.cache

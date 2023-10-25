@@ -68,10 +68,14 @@ public class SendScript : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(KeyCode.D)) { check = !check; _time = 0;  Out = 0; Return = 0; }
-        
+        //if (Input.GetKeyDown(KeyCode.D)) { check = !check; _time = 0;  Out = 0; Return = 0; }
+        /*if (Input.GetKeyDown(KeyCode.G))
+        {
+            TransportHandler.Transport.SendTo(new DataPacket(OperationCode.SetTeam, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "SetTeam" } }, SendClientFlag.Me));
+            //TransportHandler.Transport.SendTo(new DataPacket(OperationCode.GetAllRoom, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Update"}}, SendClientFlag.Me));
+        }*/
 
-        //if (Input.GetKeyDown(KeyCode.D)) { SendMess(); }
-    }
+            //if (Input.GetKeyDown(KeyCode.D)) { SendMess(); }
+        }
 
 }

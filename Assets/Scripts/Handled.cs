@@ -117,6 +117,14 @@ public static class Handled
                 MainSystem.instance.doMainThread(() => OnConnected?.Invoke());
 
                 break;
+            case OperationCode.SetTeam:
+                TransportHandler.Transport.SendTo(new DataPacket(OperationCode.GetAllRoom, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Update" } }, SendClientFlag.Me));
+
+                break;
+            case OperationCode.GetAllRoom:
+                Debug.Log($"UUID {((Room)packet.Data[ParameterCode.TeamMember]).Team[0].netClient.Id}" );
+
+                break;
             case OperationCode.MyTransform:
                 Debug.Log("ûאגûגאûאûא");
                 OnGetMessage?.Invoke(new Vector3(float.Parse(packet.Data[ParameterCode.X].ToString()), float.Parse(packet.Data[ParameterCode.Y].ToString()), float.Parse(packet.Data[ParameterCode.Z].ToString())));

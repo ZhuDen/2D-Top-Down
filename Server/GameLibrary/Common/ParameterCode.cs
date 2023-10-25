@@ -30,5 +30,6 @@ namespace GameLibrary.Common
         Z,
 
         TeamUUID,
+        TeamMember,
     }
 }

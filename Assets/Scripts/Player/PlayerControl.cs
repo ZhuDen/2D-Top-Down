@@ -1,3 +1,4 @@
+using GameLibrary.Common;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,6 +34,12 @@ public class PlayerControl : MonoBehaviour
         RotatePlayer();
         MovePlayer();
         CameraFollow();
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            TransportHandler.Transport.SendTo(new DataPacket(OperationCode.SetTeam, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "SetTeam" } }, SendClientFlag.Me));
+            //TransportHandler.Transport.SendTo(new DataPacket(OperationCode.GetAllRoom, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Update"}}, SendClientFlag.Me));
+        }
     }
 
     public void DeselectAllSkills ()

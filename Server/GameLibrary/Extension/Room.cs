@@ -2,24 +2,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Elements
+namespace GameLibrary.Extension
 {
+    [DataContract]
     public class Room
     {
         private static Room instance { get; set; }
         public static Room Instance => instance ?? (instance = new Room());
 
+        [DataMember]
         public string UUID { get; set; }
-        public Dictionary<string, TeamMember> Team; //возможно нужен класс team
+        [DataMember]
+        public List<TeamMember> Team; //возможно нужен класс team
 
-
+        [DataMember]
         public int Team1Members = 0;
+        [DataMember]
         public int Team2Members = 0;
-
+        [DataMember]
         public int Team1Kill = 0;
+        [DataMember]
         public int Team2Kill = 0;
 
         public void AddTeamMember(NetClient Member) { 
@@ -33,7 +39,7 @@ namespace Server.Elements
                 {
                     Team1Members++;
                     buffer.Team = 1;
-                    Team.Add(buffer.netClient.Id, buffer);
+                    Team.Add(buffer);
 
                 }
                 else
@@ -41,11 +47,11 @@ namespace Server.Elements
                 {
                     Team2Members++;
                     buffer.Team = 2;
-                    Team.Add(buffer.netClient.Id, buffer);
+                    Team.Add(buffer);
                 }
                 else
                 {
-                    Logger.Log.Error("Team Full");
+                    //Logger.Log.Error("Team Full");
                     //Возврат к подбору группы надо добавить
                 }
 
@@ -56,13 +62,21 @@ namespace Server.Elements
 
         public void RemoveUser(string UUID) {
 
-            if (Team[UUID].Team == 1)
-                Team1Members--;
-            else 
-            if(Team[UUID].Team == 2)
-                Team2Members--;
+            foreach (TeamMember member in Team) {
 
-            Team.Remove(UUID);
+                if (member.netClient.Id == UUID) {
+
+                    if (member.Team == 1)
+                        Team1Members--;
+                    else
+                    if (member.Team == 2)
+                        Team2Members--;
+
+                    Team.Remove(member);
+
+                }
+
+            }
 
         }
 

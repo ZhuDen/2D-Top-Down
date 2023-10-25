@@ -25,6 +25,7 @@ public class GameServer
     private GameServer()
     {
         World.Instance.Players = new ConcurrentDictionary<string, NetClient>();
+        World.Instance.Rooms = new ConcurrentDictionary<string, Room>();
         playersLock = new object();
         commandHandler = new CommandHandler();
     }

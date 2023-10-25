@@ -16,3 +16,12 @@ D:\Unity Projects\2D-Top-Down\ServerFolder\NetNull.ServerManager\obj\Debug\NetNu
 D:\Unity Projects\2D-Top-Down\ServerFolder\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.csproj.CoreCompileInputs.cache
 D:\Unity Projects\2D-Top-Down\ServerFolder\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.exe
 D:\Unity Projects\2D-Top-Down\ServerFolder\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.pdb
+D:\Unity Projects\2D-Top-Down\Server\NetNull.ServerManager\bin\Debug\NetNull.ServerManager.exe
+D:\Unity Projects\2D-Top-Down\Server\NetNull.ServerManager\bin\Debug\NetNull.ServerManager.pdb
+D:\Unity Projects\2D-Top-Down\Server\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.csproj.AssemblyReference.cache
+D:\Unity Projects\2D-Top-Down\Server\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.ServerManager.resources
+D:\Unity Projects\2D-Top-Down\Server\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.Properties.Resources.resources
+D:\Unity Projects\2D-Top-Down\Server\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.csproj.GenerateResource.cache
+D:\Unity Projects\2D-Top-Down\Server\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.csproj.CoreCompileInputs.cache
+D:\Unity Projects\2D-Top-Down\Server\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.exe
+D:\Unity Projects\2D-Top-Down\Server\NetNull.ServerManager\obj\Debug\NetNull.ServerManager.pdb
