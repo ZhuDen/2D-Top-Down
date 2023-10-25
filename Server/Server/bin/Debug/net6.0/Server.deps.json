@@ -13,7 +13,8 @@
           "MySqlConnector": "2.0.0",
           "Pomelo.EntityFrameworkCore.MySql": "6.0.0",
           "System.Runtime.CompilerServices.Unsafe": "6.0.0",
-          "log4net": "2.0.15"
+          "log4net": "2.0.15",
+          "GameLibrary.Reference": "0.0.0.1"
         },
         "runtime": {
           "Server.dll": {}
@@ -531,13 +532,12 @@
           }
         }
       },
-      "GameLibrary/1.0.0": {
-        "dependencies": {
-          "Newtonsoft.Json": "13.0.3",
-          "System.Text.Json": "7.0.3"
-        },
+      "GameLibrary.Reference/0.0.0.1": {
         "runtime": {
-          "GameLibrary.dll": {}
+          "GameLibrary.dll": {
+            "assemblyVersion": "0.0.0.1",
+            "fileVersion": "0.0.0.1"
+          }
         }
       }
     }
@@ -898,8 +898,8 @@
       "path": "zstdsharp.port/0.7.1",
       "hashPath": "zstdsharp.port.0.7.1.nupkg.sha512"
     },
-    "GameLibrary/1.0.0": {
-      "type": "project",
+    "GameLibrary.Reference/0.0.0.1": {
+      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }
