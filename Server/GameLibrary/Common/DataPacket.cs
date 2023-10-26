@@ -26,12 +26,15 @@ namespace GameLibrary.Common
         public System.Collections.Generic.Dictionary<GameLibrary.Common.ParameterCode, object> Data { get; set; }
         [DataMember]
         public GameLibrary.Common.SendClientFlag Flag { get; set; }
+        [DataMember]
+        public bool Rpc { get; set; }
 
-        public DataPacket(byte sendParameters, System.Collections.Generic.Dictionary<GameLibrary.Common.ParameterCode, object> data, SendClientFlag flag = SendClientFlag.Me)
+        public DataPacket(byte sendParameters, System.Collections.Generic.Dictionary<GameLibrary.Common.ParameterCode, object> data, SendClientFlag flag = SendClientFlag.Me, bool rpc = false)
         {
             Data = data;
             operationCode = sendParameters;
             Flag = flag;
+            Rpc = rpc;
         }
 
     }
