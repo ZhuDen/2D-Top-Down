@@ -30,14 +30,24 @@ public class CommandHandler
         {
                 DataPacket packet = await Serializer.DeserializeAsync<DataPacket>(data);
 
-                switch (packet.operationCode)
-                {
-                    case OperationCode.Unknown:
+            switch (packet.operationCode)
+            {
+                case OperationCode.Unknown:
                     Logger.Log.Debug($"Unknown command received from {client.Id}");
-                        break;
+                    break;
 
-                    case OperationCode.Disconnect:
-                    Logger.Log.Debug($"{client.Id} requested disconnection");
+                case OperationCode.Disconnect:
+                    try {
+                        World.Instance.Rooms[World.Instance.Players[client.Id].TeamUUID].RemoveUser(client.Id);
+                        World.Instance.removeClient(client.Id);
+                        client.Disconnect();
+                        Logger.Log.Debug($"{client.Id} requested disconnection");
+                        client.Dispose();
+                        client.Close();
+                    }
+                    catch (Exception ex) { Logger.Log.Error($"Disconnected error: {ex}"); }
+                    
+                    
                         break;
 
                 case OperationCode.SetDamage:
