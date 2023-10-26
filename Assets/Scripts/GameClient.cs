@@ -76,7 +76,7 @@ public class GameClient : MonoBehaviour
 
     private async Task Connection()
     {
-        await TransportHandler.Transport.SendTo(new DataPacket(OperationCode.Connect, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Connection" } }));
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Connect, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Connection" } }));
     }
 
     /*private async Task StartReceiving()

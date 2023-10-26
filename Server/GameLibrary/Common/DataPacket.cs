@@ -21,13 +21,13 @@ namespace GameLibrary.Common
     public class DataPacket
     {
         [DataMember]
-        public GameLibrary.Common.OperationCode operationCode { get; set; }
+        public byte operationCode { get; set; }
         [DataMember]
         public System.Collections.Generic.Dictionary<GameLibrary.Common.ParameterCode, object> Data { get; set; }
         [DataMember]
         public GameLibrary.Common.SendClientFlag Flag { get; set; }
 
-        public DataPacket(GameLibrary.Common.OperationCode sendParameters, System.Collections.Generic.Dictionary<GameLibrary.Common.ParameterCode, object> data, SendClientFlag flag = SendClientFlag.Me)
+        public DataPacket(byte sendParameters, System.Collections.Generic.Dictionary<GameLibrary.Common.ParameterCode, object> data, SendClientFlag flag = SendClientFlag.Me)
         {
             Data = data;
             operationCode = sendParameters;

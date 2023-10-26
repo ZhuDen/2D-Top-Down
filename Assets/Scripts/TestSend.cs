@@ -25,6 +25,6 @@ public class TestSend : MonoBehaviour
 
     async void SendMess()
     {
-        await TransportHandler.Transport.SendTo(new DataPacket(OperationCode.Message, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Test: " } }));
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Test: " } }));
     }
 }

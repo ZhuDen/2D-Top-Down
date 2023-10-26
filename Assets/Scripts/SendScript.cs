@@ -32,7 +32,7 @@ public class SendScript : MonoBehaviour
     {
         Out++;
         //Debug.Log("Hello: " + i++);
-        await TransportHandler.Transport.SendTo(new DataPacket(OperationCode.Message, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Hello: " } }));
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Hello: " } }));
     }
 
 

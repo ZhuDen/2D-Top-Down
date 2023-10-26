@@ -29,7 +29,7 @@ public static class Handled
         Dictionary<string, Transform> Clients = new Dictionary<string, Transform>();
 
 
-        switch (packet.operationCode)
+        switch ((OperationCode)packet.operationCode)
         {
             case OperationCode.Unknown:
                 Debug.Log("Unknown command received: " + packet.operationCode.ToString());
@@ -118,7 +118,7 @@ public static class Handled
 
                 break;
             case OperationCode.SetTeam:
-                TransportHandler.Transport.SendTo(new DataPacket(OperationCode.GetInfoRoom, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Update" } }, SendClientFlag.Me));
+                TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.GetInfoRoom, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Update" } }, SendClientFlag.Me));
 
                 break;
             case OperationCode.GetInfoRoom:

@@ -30,7 +30,7 @@ public class CommandHandler
         {
                 DataPacket packet = await Serializer.DeserializeAsync<DataPacket>(data);
 
-            switch (packet.operationCode)
+            switch ((OperationCode)packet.operationCode)
             {
                 case OperationCode.Unknown:
                     Logger.Log.Debug($"Unknown command received from {client.Id}");
@@ -51,21 +51,21 @@ public class CommandHandler
                         break;
 
                 case OperationCode.SetDamage:
-                    await SendTo(client, new DataPacket(OperationCode.SetDamage, new Dictionary<ParameterCode, object> { { ParameterCode.Count, packet } }));
+                    await SendTo(client, new DataPacket((byte)OperationCode.SetDamage, new Dictionary<ParameterCode, object> { { ParameterCode.Count, packet } }));
                     break;
 
                 case OperationCode.Message:
                         if (packet.Data != null)
                         {
                         Logger.Log.Debug($"{client.Id} sent a message: {packet.Data[ParameterCode.Message]}");
-                            await SendTo(client, new DataPacket(OperationCode.Message, new Dictionary<ParameterCode, object> { { ParameterCode.Message, packet.Data[ParameterCode.Message] + " RETURN" } }));
+                            await SendTo(client, new DataPacket((byte)OperationCode.Message, new Dictionary<ParameterCode, object> { { ParameterCode.Message, packet.Data[ParameterCode.Message] + " RETURN" } }));
                         }
                         break;
 
                     case OperationCode.Connect:
                         //client.Data.Parameters.Name = packet.Data[ParameterCode.Message].ToString();
                     //client.Data.pp = NetVector3(0,0,0);
-                        await SendTo(client, new DataPacket(OperationCode.Connect, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Connect" } }));
+                        await SendTo(client, new DataPacket((byte)OperationCode.Connect, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Connect" } }));
 
                     //World.Instance.getClient(client.Id).Data.NetTransform = new NetTransform ();
                     //World.Instance.getClient(client.Id).Data.NetTransform.Position = new NetVector3(1, 2, 3);
@@ -88,7 +88,7 @@ public class CommandHandler
                                 if (existingCount == null)
                                 {
 
-                                    await SendTo(client, new DataPacket(OperationCode.Authorisation, new Dictionary<ParameterCode, object>
+                                    await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<ParameterCode, object>
                                         {
                                             { ParameterCode.Message, "Error" }
                                         }));
@@ -146,7 +146,7 @@ public class CommandHandler
                                                     continue;
                                                 }
                                                 Logger.Log.Debug($"ID: {client.Id} Count: {World.Instance.Players.Count} ");
-                                                await SendTo(client, new DataPacket(OperationCode.Authorisation, new Dictionary<ParameterCode, object>
+                                                await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<ParameterCode, object>
                                                 { 
                                 { ParameterCode.Name, client.Data.Name },
                                 { ParameterCode.Message, "Success" },
@@ -159,7 +159,7 @@ public class CommandHandler
                                             }
                                             else
                                             {
-                                                await SendTo(client, new DataPacket(OperationCode.Authorisation, new Dictionary<ParameterCode, object>
+                                                await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<ParameterCode, object>
                             {
                                 { ParameterCode.Message, "Access Denied" }
                             }));
@@ -167,7 +167,7 @@ public class CommandHandler
                                         }
                                         catch (Exception ex)
                                         {
-                                            await SendTo(client, new DataPacket(OperationCode.Authorisation, new Dictionary<ParameterCode, object>
+                                            await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<ParameterCode, object>
                         {
                             { ParameterCode.Message, "Error" }
                                             }));
@@ -196,7 +196,7 @@ public class CommandHandler
 
                             if (existingCount > 0)
                             {
-                                await SendTo(client, new DataPacket(OperationCode.Registration, new Dictionary<ParameterCode, object>
+                                await SendTo(client, new DataPacket((byte)OperationCode.Registration, new Dictionary<ParameterCode, object>
                 {
                     { ParameterCode.Message, "Login already exists" }
                 }));
@@ -229,7 +229,7 @@ public class CommandHandler
 
                                         
 
-                                        await SendTo(client, new DataPacket(OperationCode.Registration, new Dictionary<ParameterCode, object>
+                                        await SendTo(client, new DataPacket((byte)OperationCode.Registration, new Dictionary<ParameterCode, object>
                                         {
                                             { ParameterCode.Name, packet.Data[ParameterCode.Name] },
                                             { ParameterCode.Message, "Registration successful" },
@@ -241,7 +241,7 @@ public class CommandHandler
                                     }
                                     else
                                     {
-                                        await SendTo(client, new DataPacket(OperationCode.Registration, new Dictionary<ParameterCode, object>
+                                        await SendTo(client, new DataPacket((byte)OperationCode.Registration, new Dictionary<ParameterCode, object>
                                         {
                                             { ParameterCode.Message, "Registration failed" }
                                         }));
@@ -287,7 +287,7 @@ public class CommandHandler
                     Logger.Log.Debug($"RoomUUID{World.Instance.Players[_client.Id].TeamUUID}");
                     Logger.Log.Debug($"RoomCount{World.Instance.Rooms.Count}");
                     Logger.Log.Debug($"GetAllRoom{World.Instance.GetRoom(World.Instance.Players[_client.Id].TeamUUID).UUID}");
-                    await SendTo(new DataPacket(OperationCode.GetInfoRoom, new Dictionary<ParameterCode, object>
+                    await SendTo(new DataPacket((byte)OperationCode.GetInfoRoom, new Dictionary<ParameterCode, object>
                                         {
                                             { ParameterCode.TeamMember,  World.Instance.GetRoom(World.Instance.Players[_client.Id].TeamUUID)},
                                         }), packet.Flag);
@@ -302,7 +302,7 @@ public class CommandHandler
                                             { ParameterCode.Y, packet.Data[ParameterCode.Y] },
                                             { ParameterCode.Z, packet.Data[ParameterCode.Z] }
                                         }));*/
-                    await SendTo(new DataPacket(OperationCode.MyTransform, new Dictionary<ParameterCode, object>
+                    await SendTo(new DataPacket((byte)OperationCode.MyTransform, new Dictionary<ParameterCode, object>
                                         {
                                             { ParameterCode.X, packet.Data[ParameterCode.X] },
                                             { ParameterCode.Y, packet.Data[ParameterCode.Y] },
@@ -333,7 +333,7 @@ public class CommandHandler
                     Logger.Log.Debug($"TeamSetTeamUUID{_client.TeamUUID}");
                     Logger.Log.Debug($"TeamSetMyUUID{_client.Id}");
                     Logger.Log.Debug("AddNewteam");
-                    await SendTo(new DataPacket(OperationCode.SetTeam, new Dictionary<ParameterCode, object>
+                    await SendTo(new DataPacket((byte)OperationCode.SetTeam, new Dictionary<ParameterCode, object>
                                         {
                                             { ParameterCode.TeamUUID, World.Instance.Players[_client.Id].TeamUUID }
                                         }), packet.Flag);

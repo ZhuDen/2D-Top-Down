@@ -23,7 +23,7 @@ public class ggwp : MonoBehaviour
 
     async void SendMess()
     {
-        await TransportHandler.Transport.SendTo(new DataPacket(OperationCode.Message, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "GGWP" } }));
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "GGWP" } }));
     }
 
     private void OnEnable ()

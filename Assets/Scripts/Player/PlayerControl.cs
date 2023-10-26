@@ -37,7 +37,7 @@ public class PlayerControl : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            TransportHandler.Transport.SendTo(new DataPacket(OperationCode.SetTeam, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "SetTeam" } }, SendClientFlag.Me));
+            TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.SetTeam, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "SetTeam" } }, SendClientFlag.Me));
             //TransportHandler.Transport.SendTo(new DataPacket(OperationCode.GetAllRoom, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Update"}}, SendClientFlag.Me));
         }
     }
