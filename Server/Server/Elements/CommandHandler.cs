@@ -43,10 +43,7 @@ public class CommandHandler
                         {
                             World.Instance.Rooms[World.Instance.Players[client.Id].TeamUUID].RemoveUser(client.Id);
                             World.Instance.removeClient(client.Id);
-                            client.Disconnect();
                             Logger.Log.Debug($"{client.Id} requested disconnection");
-                            client.Dispose();
-                            client.Close();
                         }
                         catch (Exception ex) { Logger.Log.Error($"Disconnected error: {ex}"); }
 
