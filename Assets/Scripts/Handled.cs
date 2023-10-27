@@ -20,6 +20,9 @@ public static class Handled
     public delegate void Connected();
     public static event Connected OnConnected;
 
+    public delegate void GetPlayers(List<TeamMember> _players);
+    public static event GetPlayers OnGetPlayers;
+
     static Client Client = null;
     public static void HandleReceivedData(DataPacket packet)
     {
@@ -136,12 +139,12 @@ public static class Handled
                     else
                     {
                         MainSystem.instance.MyRoom = (Room)packet.Data[ParameterCode.TeamMember];
+                        MainSystem.instance.doMainThread(() => OnGetPlayers?.Invoke(((Room)packet.Data[ParameterCode.TeamMember]).Team));
+                        /*  foreach (TeamMember member in ((Room)packet.Data[ParameterCode.TeamMember]).Team)
+                          {
 
-                        foreach (TeamMember member in ((Room)packet.Data[ParameterCode.TeamMember]).Team)
-                        {
-
-                            //GameObject.Instantiate(member);
-                        }
+                              //GameObject.Instantiate(member);
+                          }*/
                     }
 
 

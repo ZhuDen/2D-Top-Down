@@ -1,3 +1,5 @@
+using GameLibrary.Common;
+using GameLibrary.Extension;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,10 +18,13 @@ public class GameManager : MonoBehaviour
     public delegate void ClickMouse();
     public static event ClickMouse OnClickMouse;
 
+
     private float TmTransFix = 0.1f, TmSincFix = 0f;
 
+    [HideInInspector]
     public PlayerControl MyPlayerControl;
 
+    public GameObject PrefabPlayer;
 
     private void Awake()
     {
@@ -31,7 +36,33 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        MyPlayerControl = GameObject.FindObjectOfType<IsMinePlayer>().GetComponent<PlayerControl>();
+        TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.SetTeam, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "SetTeam" } }, SendClientFlag.Me));
+    }
+
+    private void OnEnable()
+    {
+        Handled.OnGetPlayers += OnGetPlayers;
+    }
+
+    private void OnDisable()
+    {
+        Handled.OnGetPlayers -= OnGetPlayers;
+    }
+
+    private void OnGetPlayers(List<TeamMember> _players)
+    {
+        Debug.Log("spawned");
+        foreach (TeamMember player in _players)
+        {
+            Debug.Log("sdffsdfdsf");
+            GameObject spawn_player = Instantiate(PrefabPlayer, new Vector3(0, 0, 0), PrefabPlayer.transform.rotation);
+            spawn_player.GetComponent<IsMinePlayer>().ID = player.netClient.Id;
+            if(player.netClient.Id == TransportHandler.Transport.Id)
+            {
+                MyPlayerControl = GameObject.FindObjectOfType<IsMinePlayer>().GetComponent<PlayerControl>();
+            }
+        }
+       
     }
 
     private void Update()
