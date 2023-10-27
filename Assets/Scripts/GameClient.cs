@@ -155,6 +155,7 @@ public class GameClient : MonoBehaviour
 
     private void OnDestroy()
     {
+        TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Disconnect, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Desconnected" } }, SendClientFlag.Me));
         reseiv.Dispose();
         clientSocket?.Disconnect(false);
         clientSocket?.Dispose();

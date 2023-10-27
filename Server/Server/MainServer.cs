@@ -246,6 +246,13 @@ public class GameServer
             {
                 if (World.Instance.Players.TryRemove(player.Id, out var inactivePlayer))
                 {
+                    try
+                    {
+                        World.Instance.Rooms[World.Instance.Players[player.Id].TeamUUID].RemoveUser(player.Id);
+                        World.Instance.removeClient(player.Id);
+                        Logger.Log.Debug($"{player.Id} requested disconnection");
+                    }
+                    catch (Exception ex) { Logger.Log.Error($"Disconnected error: {ex}"); }
                     Logger.Log.Debug($"{player.Id} disconnected.");
                 }
 

@@ -65,6 +65,15 @@ public class CommandHandler
                     case OperationCode.Connect:
                         //client.Data.Parameters.Name = packet.Data[ParameterCode.Message].ToString();
                         //client.Data.pp = NetVector3(0,0,0);
+                        if (!World.Instance.Players.ContainsKey(client.Id))
+                        {
+                            World.Instance.addClient(client);
+                        }
+                        else {
+
+                            World.Instance.Players[client.Id] = client;
+
+                        }
                         await SendTo(client, new DataPacket((byte)OperationCode.Connect, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Connect" } }));
 
                         //World.Instance.getClient(client.Id).Data.NetTransform = new NetTransform ();

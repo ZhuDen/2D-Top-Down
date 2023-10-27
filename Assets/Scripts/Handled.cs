@@ -128,6 +128,7 @@ public static class Handled
                     break;
                 case OperationCode.GetInfoRoom:
                     Debug.Log($"UUID {((Room)packet.Data[ParameterCode.TeamMember]).Team[0].netClient.Id}");
+                    
 
                     if (MainSystem.instance.MyRoom != null)
                     {
@@ -140,6 +141,7 @@ public static class Handled
                     {
                         MainSystem.instance.MyRoom = (Room)packet.Data[ParameterCode.TeamMember];
                         MainSystem.instance.doMainThread(() => OnGetPlayers?.Invoke(((Room)packet.Data[ParameterCode.TeamMember]).Team));
+                        Debug.Log($"Count{ MainSystem.instance.MyRoom.Team.Count}");
                         /*  foreach (TeamMember member in ((Room)packet.Data[ParameterCode.TeamMember]).Team)
                           {
 
