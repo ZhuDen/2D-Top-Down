@@ -62,23 +62,19 @@ namespace GameLibrary.Extension
 
         public void RemoveUser(string UUID) {
 
-            foreach (TeamMember member in Team) {
+                TeamMember itemToRemove = Team.Single(r => r.netClient.Id == UUID);
 
-                if (member.netClient.Id == UUID) {
-
-                    if (member.Team == 1)
+                    if (itemToRemove.Team == 1)
                         Team1Members--;
                     else
-                    if (member.Team == 2)
+                    if (itemToRemove.Team == 2)
                         Team2Members--;
 
-                    Team.Remove(member);
-
-                }
+                    Team.Remove(itemToRemove);
 
             }
 
-        }
+        
 
         public int GetTeamCount() { 
         
