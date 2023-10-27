@@ -22,8 +22,10 @@ namespace GameLibrary.Common
         GetClientsInfo,
         Authorisation,
         Registration,
+
         SetTeam,
         GetTeam,
         GetInfoRoom,
+        RoomConnectInfo,
     }
 }

@@ -74,7 +74,11 @@ namespace GameLibrary.Extension
 
             }
 
+        public TeamMember GetTeamMember(string UUID) { 
         
+            return Team.Single(r => r.netClient.Id == UUID);
+
+        }
 
         public int GetTeamCount() { 
         

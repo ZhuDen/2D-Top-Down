@@ -345,8 +345,9 @@ public class CommandHandler
                         Logger.Log.Debug("AddNewteam");
                         await SendTo(new DataPacket((byte)OperationCode.SetTeam, new Dictionary<ParameterCode, object>
                                         {
-                                            { ParameterCode.TeamUUID, World.Instance.Players[_client.Id].TeamUUID }
-                                        }), packet.Flag);
+                                            { ParameterCode.TeamUUID, World.Instance.Players[_client.Id].TeamUUID },
+                                            { ParameterCode.UUID, World.Instance.Rooms[_client.TeamUUID].GetTeamMember(_client.Id) }
+                                        }), SendClientFlag.FullRoom);
                         break;
 
                     default:
