@@ -41,8 +41,10 @@ public class CommandHandler
                     case OperationCode.Disconnect:
                         try
                         {
+                            if (World.Instance.Rooms[World.Instance.Players[client.Id].TeamUUID].Team.Single(r => r.netClient.Id == client.Id) != null) // Team.Single(r => r.netClient.Id == client.Id)
                             World.Instance.Rooms[World.Instance.Players[client.Id].TeamUUID].RemoveUser(client.Id);
-                            World.Instance.removeClient(client.Id);
+                            if (World.Instance.Players.ContainsKey(client.Id))
+                                World.Instance.removeClient(client.Id);
                             Logger.Log.Debug($"{client.Id} requested disconnection");
                         }
                         catch (Exception ex) { Logger.Log.Error($"Disconnected error: {ex}"); }
