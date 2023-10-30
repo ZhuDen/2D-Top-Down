@@ -28,55 +28,69 @@ namespace GameLibrary.Extension
         [DataMember]
         public int Team2Kill = 0;
 
-        public void AddTeamMember(NetClient Member) { 
-        
-            TeamMember buffer = new TeamMember();
-            buffer.netClient = Member;
+        public void AddTeamMember(NetClient Member)
+        {
+            try
+            {
+                TeamMember buffer = new TeamMember();
+                buffer.netClient = Member;
 
-            if (Team.Count < 10) {
-
-                if ((Team1Members == 0 || Team1Members <= Team2Members) && Team1Members < 5)
+                if (Team.Count < 10)
                 {
-                    Team1Members++;
-                    buffer.Team = 1;
-                    Team.Add(buffer);
+
+                    if ((Team1Members == 0 || Team1Members <= Team2Members) && Team1Members < 5)
+                    {
+                        Team1Members++;
+                        buffer.Team = 1;
+                        Team.Add(buffer);
+
+                    }
+                    else
+                        if (Team2Members < 5)
+                    {
+                        Team2Members++;
+                        buffer.Team = 2;
+                        Team.Add(buffer);
+                    }
+                    else
+                    {
+                        //Logger.Log.Error("Team Full");
+                        //Возврат к подбору группы надо добавить
+                    }
 
                 }
-                else
-                    if (Team2Members < 5)
-                {
-                    Team2Members++;
-                    buffer.Team = 2;
-                    Team.Add(buffer);
-                }
-                else
-                {
-                    //Logger.Log.Error("Team Full");
-                    //Возврат к подбору группы надо добавить
-                }
-
             }
-            
+            catch (Exception ex) {  }
+
 
         }
 
         public void RemoveUser(string UUID) {
 
+            try
+            {
                 TeamMember itemToRemove = Team.Single(r => r.netClient.Id == UUID);
 
-                    if (itemToRemove.Team == 1)
-                        Team1Members--;
-                    else
-                    if (itemToRemove.Team == 2)
-                        Team2Members--;
+                if (itemToRemove.Team == 1)
+                    Team1Members--;
+                else
+                if (itemToRemove.Team == 2)
+                    Team2Members--;
 
-                    Team.Remove(itemToRemove);
-
+                Team.Remove(itemToRemove);
             }
+            catch (Exception ex) {  }
+        }
 
-        public TeamMember GetTeamMember(string UUID) { 
-        
-            return Team.Single(r => r.netClient.Id == UUID);
+        public TeamMember GetTeamMember(string UUID) {
+
+            TeamMember Member = new TeamMember();
+            try
+            {
+                Member = Team.Single(r => r.netClient.Id == UUID);
+            }
+            catch (Exception ex) {  }
+            return Member;
 
         }
 

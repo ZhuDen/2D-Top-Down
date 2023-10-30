@@ -85,9 +85,9 @@ namespace Server.Elements
                     Logger.Log.Debug($"UnderCreateRoom: {bufferRoomUUID}");
                     return bufferRoomUUID;
                 }
-                return "0";
+                return null;
             }
-            catch (Exception ex) { return "Error 0";}
+            catch (Exception ex) { return null;}
         }
 
 

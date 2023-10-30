@@ -55,32 +55,43 @@ public class CommandHandler
                         break;
 
                     case OperationCode.Message:
-                        if (packet.Data != null)
+                        try
                         {
-                            Logger.Log.Debug($"{client.Id} sent a message: {packet.Data[ParameterCode.Message]}");
-                            await SendTo(client, new DataPacket((byte)OperationCode.Message, new Dictionary<ParameterCode, object> { { ParameterCode.Message, packet.Data[ParameterCode.Message] + " RETURN" } }));
+                            if (packet.Data != null)
+                            {
+                                Logger.Log.Debug($"{client.Id} sent a message: {packet.Data[ParameterCode.Message]}");
+                                await SendTo(client, new DataPacket((byte)OperationCode.Message, new Dictionary<ParameterCode, object> { { ParameterCode.Message, packet.Data[ParameterCode.Message] }
+                                    ,{ ParameterCode.Id, packet.Data[ParameterCode.Id] } }));
+                            }
                         }
+                        catch (Exception ex) { Logger.Log.Error($"MessageError: {ex}"); }
                         break;
 
                     case OperationCode.Connect:
                         //client.Data.Parameters.Name = packet.Data[ParameterCode.Message].ToString();
                         //client.Data.pp = NetVector3(0,0,0);
-                        if (!World.Instance.Players.ContainsKey(client.Id))
+                        try
                         {
-                            World.Instance.addClient(client);
-                        }
-                        else {
+                            //if (!World.Instance.Players.ContainsKey(client.Id))
+                            //{
+                                World.Instance.addClient(client);
+                           // }
+                            //else
+                           // {
 
-                            World.Instance.Players[client.Id] = client;
+                               // World.Instance.Players[client.Id] = client;
 
+                           // }
+                            await SendTo(client, new DataPacket((byte)OperationCode.Connect, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Connect" } }));
+                            Logger.Log.Debug($"Player Connected!");
                         }
-                        await SendTo(client, new DataPacket((byte)OperationCode.Connect, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Connect" } }));
+                        catch (Exception ex) { Logger.Log.Error($"ConnectionError: {ex}"); }
 
                         //World.Instance.getClient(client.Id).Data.NetTransform = new NetTransform ();
                         //World.Instance.getClient(client.Id).Data.NetTransform.Position = new NetVector3(1, 2, 3);
                         //await SendTo(client, new DataPacket(OperationCode.GetClientsInfo, new Dictionary<ParameterCode, object> { { ParameterCode.Client, World.Instance.getClient(client.Id).Data } }));
 
-                        Logger.Log.Debug($"Player Connected!");
+                        
                         break;
 
                     case OperationCode.Authorisation:
@@ -291,15 +302,18 @@ public class CommandHandler
                         break;
 
                     case OperationCode.GetInfoRoom:
-
-                        Logger.Log.Debug("GetAllRoom");
-                        Logger.Log.Debug($"RoomUUID{World.Instance.Players[_client.Id].TeamUUID}");
-                        Logger.Log.Debug($"RoomCount{World.Instance.Rooms.Count}");
-                        Logger.Log.Debug($"GetAllRoom{World.Instance.GetRoom(World.Instance.Players[_client.Id].TeamUUID).UUID}");
-                        await SendTo(new DataPacket((byte)OperationCode.GetInfoRoom, new Dictionary<ParameterCode, object>
+                        try
+                        {
+                            Logger.Log.Debug("GetAllRoom");
+                            Logger.Log.Debug($"RoomUUID{World.Instance.Players[_client.Id].TeamUUID}");
+                            Logger.Log.Debug($"RoomCount{World.Instance.Rooms.Count}");
+                            Logger.Log.Debug($"GetAllRoom{World.Instance.GetRoom(World.Instance.Players[_client.Id].TeamUUID).UUID}");
+                            await SendTo(new DataPacket((byte)OperationCode.GetInfoRoom, new Dictionary<ParameterCode, object>
                                         {
                                             { ParameterCode.TeamMember,  World.Instance.GetRoom(World.Instance.Players[_client.Id].TeamUUID)},
                                         }), packet.Flag);
+                        }
+                        catch (Exception ex) { Logger.Log.Error($"GetInfoRoomError: {ex}"); }
 
                         break;
 
@@ -311,52 +325,61 @@ public class CommandHandler
                                                 { ParameterCode.Y, packet.Data[ParameterCode.Y] },
                                                 { ParameterCode.Z, packet.Data[ParameterCode.Z] }
                                             }));*/
-                        await SendTo(new DataPacket((byte)OperationCode.MyTransform, new Dictionary<ParameterCode, object>
+                        try
+                        {
+                            await SendTo(new DataPacket((byte)OperationCode.MyTransform, new Dictionary<ParameterCode, object>
                                         {
                                             { ParameterCode.X, packet.Data[ParameterCode.X] },
                                             { ParameterCode.Y, packet.Data[ParameterCode.Y] },
                                             { ParameterCode.Z, packet.Data[ParameterCode.Z] },
                                             { ParameterCode.Id, packet.Data[ParameterCode.Id] }
                                         }), packet.Flag);
-
+                        }
+                        catch (Exception ex) { Logger.Log.Error($"MyTransformError: {ex}"); }
 
                         break;
 
                     //Добавляемся в новую тиму соло
                     case OperationCode.SetTeam:
-
-                        Logger.Log.Debug("Setteam");
-                        //Если группа уже есть, то выходим
-                        if (World.Instance.Players[_client.Id].TeamUUID != "0" && World.Instance.Players[_client.Id].TeamUUID != null && World.Instance.Players[_client.Id].TeamUUID != "")
+                        try
                         {
-                            Logger.Log.Debug($"Deleteteam{World.Instance.Players[_client.Id].TeamUUID}");
-                            try
+                            Logger.Log.Debug("Setteam");
+                            //Если группа уже есть, то выходим
+                            if (World.Instance.Players[_client.Id].TeamUUID != "0" && World.Instance.Players[_client.Id].TeamUUID != null && World.Instance.Players[_client.Id].TeamUUID != "")
                             {
-                                World.Instance.Rooms[World.Instance.Players[_client.Id].TeamUUID].RemoveUser(_client.Id);
+                                Logger.Log.Debug($"Deleteteam{World.Instance.Players[_client.Id].TeamUUID}");
+                                try
+                                {
+                                    World.Instance.Rooms[World.Instance.Players[_client.Id].TeamUUID].RemoveUser(_client.Id);
+                                }
+                                catch (Exception ex) { }
                             }
-                            catch (Exception ex) { }
-                        }
-                        //заходим в новую
-                        Logger.Log.Debug($"TeamSetMyUUID{_client.Id}");
-                        World.Instance.Players[_client.Id].TeamUUID = World.Instance.FindRoomForMember(_client.Id);
-                        _client.TeamUUID = World.Instance.Players[_client.Id].TeamUUID;
-                        Logger.Log.Debug($"TeamSetTeamUUID{_client.TeamUUID}");
-                        Logger.Log.Debug($"TeamSetMyUUID{_client.Id}");
-                        Logger.Log.Debug("AddNewteam");
-                        await SendTo(new DataPacket((byte)OperationCode.SetTeam, new Dictionary<ParameterCode, object>
+                            //заходим в новую
+                            Logger.Log.Debug($"TeamSetMyUUID{_client.Id}");
+                            World.Instance.Players[_client.Id].TeamUUID = World.Instance.FindRoomForMember(_client.Id);
+                            _client.TeamUUID = World.Instance.Players[_client.Id].TeamUUID;
+                            Logger.Log.Debug($"TeamSetTeamUUID{_client.TeamUUID}");
+                            Logger.Log.Debug($"TeamSetMyUUID{_client.Id}");
+                            Logger.Log.Debug("AddNewteam");
+                            await SendTo(new DataPacket((byte)OperationCode.SetTeam, new Dictionary<ParameterCode, object>
                                         {
                                             { ParameterCode.TeamUUID, World.Instance.Players[_client.Id].TeamUUID },
                                             { ParameterCode.UUID, World.Instance.Rooms[_client.TeamUUID].GetTeamMember(_client.Id) }
                                         }), SendClientFlag.FullRoom);
-                        break;
+                        }
+                        catch (Exception ex) { Logger.Log.Error($"SetTeamError: {ex}"); }
+                    break;
 
                     default:
                         break;
                 }
             }
             else {
-
-                await SendTo(packet, packet.Flag);
+                try
+                {
+                    await SendTo(packet, packet.Flag);
+                }
+                catch (Exception ex) { Logger.Log.Error($"RPCError: {ex}"); }
 
 
             }
