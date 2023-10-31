@@ -108,8 +108,19 @@ public static class Handled
                 case OperationCode.Message:
                     if (packet.Data != null)
                     {
-                        string message = packet.Data[(byte)ParameterCode.Message].ToString();
-                        MainSystem.instance.doMainThread(() => OnGetString?.Invoke(message, packet.Data[(byte)ParameterCode.Id].ToString()));
+                        Debug.Log("11111");
+                        if (packet.Data.ContainsKey((byte)MyParameters.Ping))
+                        {
+                            Debug.Log("2222");
+                            if (packet.Data[(byte)MyParameters.Ping].ToString() == "Ping")
+                            {
+                                Debug.Log("3333");
+                                MainSystem.instance.doMainThread(() => GameManager.Instance.UpdatePing());
+                            }
+                        }
+                        
+                       // string message = packet.Data[(byte)ParameterCode.Message].ToString();
+                      //  MainSystem.instance.doMainThread(() => OnGetString?.Invoke(message, packet.Data[(byte)ParameterCode.Id].ToString()));
                     }
                     else
                     {

@@ -3,7 +3,9 @@ using GameLibrary.Extension;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,6 +30,10 @@ public class GameManager : MonoBehaviour
     public PlayerControl MyPlayerControl;
 
     public GameObject PrefabPlayer;
+
+    public Text TextPing;
+
+    public DateTime dateTimeOld, dateTimeNew;
 
     private void Awake()
     {
@@ -78,7 +84,7 @@ public class GameManager : MonoBehaviour
             {
                 GameObject spawn_player = Instantiate(PrefabPlayer, new Vector3(0, 0, 0), PrefabPlayer.transform.rotation);
                 spawn_player.GetComponent<IsMinePlayer>().ID = player.netClient.Id;
-                spawn_player.name = "Player_" + Random.Range(11, 99);
+                spawn_player.name = "Player_" + UnityEngine.Random.Range(11, 99);
                 Debug.Log("SETTED: " + player.netClient.Id);
                 if (player.netClient.Id == TransportHandler.Transport.Id)
                 {
@@ -107,6 +113,7 @@ public class GameManager : MonoBehaviour
         if (TmTransFix >= 0.09f)
         {
             OnTransUpdate?.Invoke();
+            SendPingTest();
             TmTransFix = 0f;
         }
 
@@ -117,5 +124,18 @@ public class GameManager : MonoBehaviour
             TmSincFix = 0f;
         }
 
+    }
+
+    async void SendPingTest ()
+    {
+        dateTimeOld = DateTime.Now;
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<byte, object> { { (byte)MyParameters.Ping, "Ping" }}, SendClientFlag.Me));
+
+    }
+
+    public void UpdatePing ()
+    {
+        TimeSpan pingTime = DateTime.Now - dateTimeOld;
+        TextPing.text = string.Format("ѕинг: {0} мс", pingTime.Milliseconds);
     }
 }
