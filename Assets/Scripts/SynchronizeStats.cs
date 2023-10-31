@@ -55,7 +55,7 @@ public class SynchronizeStats : MonoBehaviour
 
     private void OnGetString(string _res, string _id)
     {
-        Debug.Log(playerControl.isMinePlayer.ID + " || " +_id);
+        
         if (playerControl.isMinePlayer.ID == _id)
         {
             if (!playerControl.isMinePlayer.IsMine())

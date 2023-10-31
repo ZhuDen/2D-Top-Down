@@ -106,7 +106,7 @@ public static class Handled
                     break;
 
                 case OperationCode.Message:
-                    if (packet.Data != null)
+                   /* if (packet.Data != null)
                     {
                         Debug.Log("11111");
                         if (packet.Data.ContainsKey((byte)MyParameters.Ping))
@@ -125,7 +125,7 @@ public static class Handled
                     else
                     {
                         Debug.Log($"Received message: Null");
-                    }
+                    }*/
                     break;
 
                 case OperationCode.Connect:
@@ -182,9 +182,25 @@ public static class Handled
         }
         else {
 
-            if (packet.Data.ContainsKey((byte)ParameterCode.Message))
+            if (packet.Data.ContainsKey((byte)MyParameters.Ping))
             {
-                MainSystem.instance.doMainThread(() => OnGetString?.Invoke(packet.Data[(byte)ParameterCode.Message].ToString(), packet.Data[(byte)ParameterCode.Id].ToString()));
+                //MainSystem.instance.doMainThread(() => OnGetString?.Invoke(packet.Data[(byte)ParameterCode.Message].ToString(), packet.Data[(byte)ParameterCode.Id].ToString()));
+                if (packet.Data != null)
+                {
+                    Debug.Log("11111");
+                    if (packet.Data.ContainsKey((byte)MyParameters.Ping))
+                    {
+                        Debug.Log("2222");
+                        if (packet.Data[(byte)MyParameters.Ping].ToString() == "Ping")
+                        {
+                            Debug.Log("3333");
+                            MainSystem.instance.doMainThread(() => GameManager.Instance.UpdatePing());
+                        }
+                    }
+
+                    // string message = packet.Data[(byte)ParameterCode.Message].ToString();
+                    //  MainSystem.instance.doMainThread(() => OnGetString?.Invoke(message, packet.Data[(byte)ParameterCode.Id].ToString()));
+                }
             }
 
             Debug.Log($"RPC REQUEST: { packet.Data.Keys}");

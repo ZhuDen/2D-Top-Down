@@ -61,9 +61,8 @@ public class CommandHandler
                         {
                             if (packet.Data != null)
                             {
-                                Logger.Log.Debug($"{client.Id} sent a message: {packet.Data[(byte)ParameterCode.Message]}");
-                                await SendTo(client, new DataPacket((byte)OperationCode.Message, new Dictionary<byte, object> { { (byte)ParameterCode.Message, packet.Data[(byte)ParameterCode.Message] }
-                                    ,{ (byte)ParameterCode.Id, packet.Data[(byte)ParameterCode.Id] } }));
+                                //Logger.Log.Debug($"{client.Id} sent a message: {packet.Data[(byte)ParameterCode.Message]}");
+                                await SendTo(client, new DataPacket((byte)OperationCode.Message, packet.Data));
                             }
                         }
                         catch (Exception ex) { Logger.Log.Error($"MessageError: {ex}"); }

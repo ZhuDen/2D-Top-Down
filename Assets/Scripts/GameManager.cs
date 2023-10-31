@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
     async void SendPingTest ()
     {
         dateTimeOld = DateTime.Now;
-        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<byte, object> { { (byte)MyParameters.Ping, "Ping" }}, SendClientFlag.Me));
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<byte, object> { { (byte)MyParameters.Ping, "Ping" }}, SendClientFlag.Me, true));
 
     }
 
