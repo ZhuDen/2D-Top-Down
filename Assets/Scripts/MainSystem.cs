@@ -27,6 +27,7 @@ public class MainSystem : MonoBehaviour
 
     private void Awake()
     {
+        Application.runInBackground = true;
         if (instance == null)
         {
             instance = this;

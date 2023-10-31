@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
     public delegate void ClickMouse();
     public static event ClickMouse OnClickMouse;
 
+    public delegate void InitPlayer();
+    public static event InitPlayer OnInitPlayer;
+
 
     private float TmTransFix = 0.1f, TmSincFix = 0f;
 
@@ -47,19 +50,41 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         Handled.OnGetPlayers -= OnGetPlayers;
+
+        TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Disconnect, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Desconnected" } }, SendClientFlag.Me));
+
     }
 
     private void OnGetPlayers(List<TeamMember> _players)
     {
-        Debug.Log("spawned");
+        // check all ID players
+        GameObject[] AllPlayers = GameObject.FindGameObjectsWithTag("Player");
+        List<string> players_id = new List<string>();
+        for (int i = 0; i < AllPlayers.Length; i++)
+        {
+            players_id.Add(AllPlayers[i].GetComponent<IsMinePlayer>().ID);
+        }
         foreach (TeamMember player in _players)
         {
-            Debug.Log("sdffsdfdsf");
-            GameObject spawn_player = Instantiate(PrefabPlayer, new Vector3(0, 0, 0), PrefabPlayer.transform.rotation);
-            spawn_player.GetComponent<IsMinePlayer>().ID = player.netClient.Id;
-            if(player.netClient.Id == TransportHandler.Transport.Id)
+            bool isSpawn = true;
+            if(players_id.Count > 0)
             {
-                MyPlayerControl = GameObject.FindObjectOfType<IsMinePlayer>().GetComponent<PlayerControl>();
+                if (players_id.Contains(player.netClient.Id))
+                {
+                    isSpawn = false;
+                }
+            }
+            if (isSpawn)
+            {
+                GameObject spawn_player = Instantiate(PrefabPlayer, new Vector3(0, 0, 0), PrefabPlayer.transform.rotation);
+                spawn_player.GetComponent<IsMinePlayer>().ID = player.netClient.Id;
+                spawn_player.name = "Player_" + Random.Range(11, 99);
+                Debug.Log("SETTED: " + player.netClient.Id);
+                if (player.netClient.Id == TransportHandler.Transport.Id)
+                {
+                    MyPlayerControl = GameObject.FindObjectOfType<IsMinePlayer>().GetComponent<PlayerControl>();
+                    OnInitPlayer?.Invoke();
+                }
             }
         }
        

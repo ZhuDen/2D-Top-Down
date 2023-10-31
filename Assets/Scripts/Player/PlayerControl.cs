@@ -17,8 +17,9 @@ public class PlayerControl : MonoBehaviour
 
     public PlayerAnimatorControl playerAnimatorControl;
     public PlayerStats playerStats;
+    public IsMinePlayer isMinePlayer;
 
-    private void Awake()
+  /*  private void Awake()
     {
         CameraTransform = Camera.main.transform;
         PlayerTransform = this.transform;
@@ -27,10 +28,31 @@ public class PlayerControl : MonoBehaviour
     private void Start()
     {
         UISpawner.Instance.SpawnSkills(MySkills);
+    }*/
+
+    private void OnEnable()
+    {
+        GameManager.OnInitPlayer += OnInitPlayer;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnInitPlayer -= OnInitPlayer;
+    }
+
+    private void OnInitPlayer()
+    {
+        if (!isMinePlayer.IsMine()) return;
+
+        CameraTransform = Camera.main.transform;
+        PlayerTransform = this.transform;
+        UISpawner.Instance.SpawnSkills(MySkills);
     }
 
     void Update()
     {
+        if (!isMinePlayer.IsMine()) return;
+
         RotatePlayer();
         MovePlayer();
         CameraFollow();

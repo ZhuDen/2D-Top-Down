@@ -15,7 +15,7 @@ using GameLibrary.Extension;
 
 public class GameClient : MonoBehaviour
 {
-    public UnityEngine.UI.Text UINameText;
+    public UnityEngine.UI.Text UINameText, TextInfo;
 
     public static GameClient instance; //46.148.235.140 //127.0.0.1
     private const string ServerAddress = "46.148.235.140";
@@ -49,7 +49,7 @@ public class GameClient : MonoBehaviour
             try
             {
                 await clientSocket.ConnectAsync(ServerAddress, ServerPort);
-                Debug.Log("Сервер найден, соединение успешно произведено.");
+                TextInfo.text = "Сервер найден, соединение успешно произведено.";
                 TransportHandler.Transport.Socket = clientSocket;
                 //await Autorisation();
                 reseiv = Task.Run(ReceiveData);
@@ -60,7 +60,7 @@ public class GameClient : MonoBehaviour
             }
             catch (Exception ex)
             {
-                Debug.Log($"Попытка соединения с сервером (Attempt {attempt + 1})");
+                TextInfo.text = $"Попытка соединения с сервером (Попытка: {attempt + 1})";
                 attempt++;
             }
 
@@ -70,7 +70,7 @@ public class GameClient : MonoBehaviour
 
         if (attempt == 5)
         {
-            Debug.Log("Соединение с сервером не удалось, возможно он не доступен или отключен.");
+            TextInfo.text = "Соединение с сервером не удалось, возможно он не доступен или отключен. Проверьте подключение к интернету.";
         }
     }
 

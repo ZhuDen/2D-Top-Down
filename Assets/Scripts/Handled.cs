@@ -11,8 +11,11 @@ using UnityEngine.SceneManagement;
 
 public static class Handled 
 {
-    public delegate void GetMessage(Vector3 pos);
+    public delegate void GetMessage(Vector3 pos, string id);
     public static event GetMessage OnGetMessage;
+
+    public delegate void GetString(string _res, string id);
+    public static event GetString OnGetString;
 
     public delegate void Autorized();
     public static event Autorized OnAutorized;
@@ -60,6 +63,7 @@ public static class Handled
                         Debug.Log($" Lvl: {MainSystem.instance.ClientData.Lvl}");
                         Debug.Log($"Authorisation {packet.Data[ParameterCode.Name].ToString()}");
                         Debug.Log("ID: " + packet.Data[ParameterCode.Id].ToString());
+                        TransportHandler.Transport.Id = packet.Data[ParameterCode.Id].ToString();
                     }
                     else
                     {
@@ -104,11 +108,8 @@ public static class Handled
                 case OperationCode.Message:
                     if (packet.Data != null)
                     {
-                        SendScript.Instance.Return++;
-                        //TestSend ss = new TestSend();
-                        float message = (float)packet.Data[ParameterCode.Message];
-                        //  OnGetMessage?.Invoke(message);
-                        Debug.Log($"Received message: {message} ");
+                        string message = packet.Data[ParameterCode.Message].ToString();
+                        MainSystem.instance.doMainThread(() => OnGetString?.Invoke(message, packet.Data[ParameterCode.Id].ToString()));
                     }
                     else
                     {
@@ -123,7 +124,8 @@ public static class Handled
 
                     break;
                 case OperationCode.SetTeam:
-                    TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.GetInfoRoom, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Update" } }, SendClientFlag.Me));
+                    Debug.Log("New con");
+                    TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.GetInfoRoom, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Update" } }, SendClientFlag.FullRoom));
 
                     break;
                 case OperationCode.GetInfoRoom:
@@ -136,24 +138,19 @@ public static class Handled
                         {
                             MainSystem.instance.MyRoom = (Room)packet.Data[ParameterCode.TeamMember];
                         }
+                        MainSystem.instance.doMainThread(() => OnGetPlayers?.Invoke(((Room)packet.Data[ParameterCode.TeamMember]).Team));
                     }
                     else
                     {
                         MainSystem.instance.MyRoom = (Room)packet.Data[ParameterCode.TeamMember];
                         MainSystem.instance.doMainThread(() => OnGetPlayers?.Invoke(((Room)packet.Data[ParameterCode.TeamMember]).Team));
                         Debug.Log($"Count{ MainSystem.instance.MyRoom.Team.Count}");
-                        /*  foreach (TeamMember member in ((Room)packet.Data[ParameterCode.TeamMember]).Team)
-                          {
-
-                              //GameObject.Instantiate(member);
-                          }*/
                     }
 
 
                     break;
                 case OperationCode.MyTransform:
-                    Debug.Log("ûàâûâàûàûà");
-                    OnGetMessage?.Invoke(new Vector3(float.Parse(packet.Data[ParameterCode.X].ToString()), float.Parse(packet.Data[ParameterCode.Y].ToString()), float.Parse(packet.Data[ParameterCode.Z].ToString())));
+                    OnGetMessage?.Invoke(new Vector3(float.Parse(packet.Data[ParameterCode.X].ToString()), float.Parse(packet.Data[ParameterCode.Y].ToString()), float.Parse(packet.Data[ParameterCode.Z].ToString())), packet.Data[ParameterCode.Id].ToString());
 
                     break;
 
@@ -173,6 +170,11 @@ public static class Handled
             }
         }
         else {
+
+            if (packet.Data.ContainsKey(ParameterCode.Message))
+            {
+                MainSystem.instance.doMainThread(() => OnGetString?.Invoke(packet.Data[ParameterCode.Message].ToString(), packet.Data[ParameterCode.Id].ToString()));
+            }
 
             Debug.Log($"RPC REQUEST: { packet.Data.Keys}");
 

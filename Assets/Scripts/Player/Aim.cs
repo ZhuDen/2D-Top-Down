@@ -17,6 +17,6 @@ public class Aim : MonoBehaviour
         RectTransformAim.anchoredPosition = Input.mousePosition;
 
         ImageAim.enabled = !EventSystem.current.IsPointerOverGameObject();
-        Cursor.visible = EventSystem.current.IsPointerOverGameObject();
+      //  Cursor.visible = EventSystem.current.IsPointerOverGameObject();
     }
 }

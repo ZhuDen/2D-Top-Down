@@ -3,11 +3,9 @@ using UnityEngine;
 public class IsMinePlayer : MonoBehaviour
 {
     public string ID;
-    private void Start()
+
+    public bool IsMine()
     {
-       /* if(если игрок не наш)
-        {
-            удалить этот скрипт с объекта
-        }*/
+        return ID == TransportHandler.Transport.Id;
     }
 }

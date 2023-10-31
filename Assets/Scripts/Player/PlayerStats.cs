@@ -12,14 +12,17 @@ public class PlayerStats : MonoBehaviour
     public Sprite MyIcon;
     public int MaxHP, MaxMana;
 
-    private int CountHP, CountMana;
+    public int CountHP, CountMana;
     public int CountRegenMana, CountRegenHP;
 
     private Text TextCountHP, TextCountMana;
     public Text TextRegenHP, TextRegenMana;
-    private Image ImageFillHP, ImageFillMana;
-    private float MultiplerFillMana, MultiplerFillHP;
+    public Image ImageFillHP, ImageFillMana;
+    public float MultiplerFillMana, MultiplerFillHP;
     private float TmRegen;
+
+    public PlayerControl playerControl;
+
     public int HP
     {
         get
@@ -36,8 +39,33 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    public float MultiplerHP
+    {
+        get
+        {
+            return MultiplerFillHP;
+        }
+    }
+
     private void Start()
     {
+        
+    }
+
+    private void OnEnable()
+    {
+        GameManager.OnInitPlayer += OnInitPlayer;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnInitPlayer -= OnInitPlayer;
+    }
+
+    private void OnInitPlayer()
+    {
+        if (!playerControl.isMinePlayer.IsMine()) return;
+
         TextCountHP = UISpawner.Instance.TextCountHP;
         TextRegenHP = UISpawner.Instance.TextRegenHP;
         TextCountMana = UISpawner.Instance.TextCountMana;
@@ -56,6 +84,8 @@ public class PlayerStats : MonoBehaviour
 
     private void Update()
     {
+        if (!playerControl.isMinePlayer.IsMine()) return;
+
         TextRegenHP.text = string.Format("+{0}", CountRegenHP);
         TextRegenMana.text = string.Format("+{0}", CountRegenMana);
 
@@ -126,11 +156,14 @@ public class PlayerStats : MonoBehaviour
 
     public void UpdateUIStats ()
     {
-        TextCountHP.text = string.Format("{0}/{1}", CountHP, MaxHP);
-        ImageFillHP.fillAmount = MultiplerFillHP * CountHP;
+        if (playerControl.isMinePlayer.IsMine())
+        {
+            TextCountHP.text = string.Format("{0}/{1}", CountHP, MaxHP);
+            ImageFillHP.fillAmount = MultiplerFillHP * CountHP;
 
-        TextCountMana.text = string.Format("{0}/{1}", CountMana, MaxMana);
-        ImageFillMana.fillAmount = MultiplerFillMana * CountMana;
+            TextCountMana.text = string.Format("{0}/{1}", CountMana, MaxMana);
+            ImageFillMana.fillAmount = MultiplerFillMana * CountMana;
+        }
     }
 
     public void UpdatedMultiplers ()
