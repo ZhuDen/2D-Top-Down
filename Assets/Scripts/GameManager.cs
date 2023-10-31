@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.SetTeam, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "SetTeam" } }, SendClientFlag.Me));
+        TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.SetTeam, new Dictionary<byte, object> { { (byte)ParameterCode.Message, "SetTeam" } }, SendClientFlag.Me));
     }
 
     private void OnEnable()
@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
     {
         Handled.OnGetPlayers -= OnGetPlayers;
 
-        TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Disconnect, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Desconnected" } }, SendClientFlag.Me));
+        TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Disconnect, new Dictionary<byte, object> { { (byte)ParameterCode.Message, "Desconnected" } }, SendClientFlag.Me));
 
     }
 

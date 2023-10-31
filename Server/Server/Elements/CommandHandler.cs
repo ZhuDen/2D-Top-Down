@@ -41,10 +41,10 @@ public class CommandHandler
                     case OperationCode.Disconnect:
                         try
                         {
-                            if (World.Instance.Rooms[World.Instance.Players[client.Id].TeamUUID].Team.Single(r => r.netClient.Id == client.Id) != null) // Team.Single(r => r.netClient.Id == client.Id)
-                            World.Instance.Rooms[World.Instance.Players[client.Id].TeamUUID].RemoveUser(client.Id);
-                            if (World.Instance.Players.ContainsKey(client.Id))
-                                World.Instance.removeClient(client.Id);
+                           // if (World.Instance.Rooms[World.Instance.Players[client.Id].TeamUUID].Team.Single(r => r.netClient.Id == client.Id) != null) // Team.Single(r => r.netClient.Id == client.Id)
+                            //World.Instance.Rooms[World.Instance.Players[client.Id].TeamUUID].RemoveUser(client.Id);
+                           //if (World.Instance.Players.ContainsKey(client.Id))
+                                //World.Instance.removeClient(client.Id);
                             Logger.Log.Debug($"{client.Id} requested disconnection");
                         }
                         catch (Exception ex) { Logger.Log.Error($"Disconnected error: {ex}"); }
@@ -53,7 +53,7 @@ public class CommandHandler
                         break;
 
                     case OperationCode.SetDamage:
-                        await SendTo(client, new DataPacket((byte)OperationCode.SetDamage, new Dictionary<ParameterCode, object> { { ParameterCode.Count, packet } }));
+                        await SendTo(client, new DataPacket((byte)OperationCode.SetDamage, new Dictionary<byte, object> { { (byte)ParameterCode.Count, packet } }));
                         break;
 
                     case OperationCode.Message:
@@ -61,9 +61,9 @@ public class CommandHandler
                         {
                             if (packet.Data != null)
                             {
-                                Logger.Log.Debug($"{client.Id} sent a message: {packet.Data[ParameterCode.Message]}");
-                                await SendTo(client, new DataPacket((byte)OperationCode.Message, new Dictionary<ParameterCode, object> { { ParameterCode.Message, packet.Data[ParameterCode.Message] }
-                                    ,{ ParameterCode.Id, packet.Data[ParameterCode.Id] } }));
+                                Logger.Log.Debug($"{client.Id} sent a message: {packet.Data[(byte)ParameterCode.Message]}");
+                                await SendTo(client, new DataPacket((byte)OperationCode.Message, new Dictionary<byte, object> { { (byte)ParameterCode.Message, packet.Data[(byte)ParameterCode.Message] }
+                                    ,{ (byte)ParameterCode.Id, packet.Data[(byte)ParameterCode.Id] } }));
                             }
                         }
                         catch (Exception ex) { Logger.Log.Error($"MessageError: {ex}"); }
@@ -76,7 +76,7 @@ public class CommandHandler
                         {
                             //if (!World.Instance.Players.ContainsKey(client.Id))
                             //{
-                                World.Instance.addClient(client);
+                                //World.Instance.addClient(client);
                            // }
                             //else
                            // {
@@ -84,7 +84,7 @@ public class CommandHandler
                                // World.Instance.Players[client.Id] = client;
 
                            // }
-                            await SendTo(client, new DataPacket((byte)OperationCode.Connect, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Connect" } }));
+                            await SendTo(client, new DataPacket((byte)OperationCode.Connect, new Dictionary<byte, object> { { (byte)ParameterCode.Message, "Connect" } }));
                             Logger.Log.Debug($"Player Connected!");
                         }
                         catch (Exception ex) { Logger.Log.Error($"ConnectionError: {ex}"); }
@@ -103,16 +103,16 @@ public class CommandHandler
                             con.Open();
                             using (MySqlCommand cmd = new MySqlCommand("SELECT * FROM Accounts WHERE Login = @Login;", con))
                             {
-                                cmd.Parameters.AddWithValue("@Login", packet.Data[ParameterCode.Login].ToString());
+                                cmd.Parameters.AddWithValue("@Login", packet.Data[(byte)ParameterCode.Login].ToString());
                                 object existingCount = cmd.ExecuteScalar();
                                 using (MySqlDataReader reader = cmd.ExecuteReader())
                                 {
                                     if (existingCount == null)
                                     {
 
-                                        await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<ParameterCode, object>
+                                        await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<byte, object>
                                         {
-                                            { ParameterCode.Message, "Error" }
+                                            { (byte)ParameterCode.Message, "Error" }
                                         }));
 
                                     }
@@ -123,8 +123,8 @@ public class CommandHandler
                                             try
                                             {
 
-                                                if (reader["Login"].ToString() == packet.Data[ParameterCode.Login].ToString() &&
-                                                    reader["Password"].ToString() == packet.Data[ParameterCode.Password].ToString())
+                                                if (reader["Login"].ToString() == packet.Data[(byte)ParameterCode.Login].ToString() &&
+                                                    reader["Password"].ToString() == packet.Data[(byte)ParameterCode.Password].ToString())
                                                 {
                                                     client.Id = reader["UUID"].ToString();
                                                     client.Data = new ClientData();
@@ -160,7 +160,7 @@ public class CommandHandler
                                                         }
                                                     }
 
-
+                                                    //добавляем в world
                                                     if (!World.Instance.Players.TryAdd(client.Id, client))
                                                     {
                                                         Logger.Log.Debug($"Failed to add player {client.Id} to the player list.");
@@ -168,30 +168,30 @@ public class CommandHandler
                                                         continue;
                                                     }
                                                     Logger.Log.Debug($"ID: {client.Id} Count: {World.Instance.Players.Count} ");
-                                                    await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<ParameterCode, object>
+                                                    await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<byte, object>
                                                 {
-                                { ParameterCode.Name, client.Data.Name },
-                                { ParameterCode.Message, "Success" },
-                                { ParameterCode.Id, client.Data.ID },
-                                { ParameterCode.LVL, client.Data.Lvl },
-                                { ParameterCode.Exp, client.Data.Exp },
-                                { ParameterCode.IconIndex, client.Data.Icon }
+                                { (byte)ParameterCode.Name, client.Data.Name },
+                                { (byte)ParameterCode.Message, "Success" },
+                                { (byte)ParameterCode.Id, client.Data.ID },
+                                { (byte)ParameterCode.LVL, client.Data.Lvl },
+                                { (byte)ParameterCode.Exp, client.Data.Exp },
+                                { (byte)ParameterCode.IconIndex, client.Data.Icon }
 
                                                 }));
                                                 }
                                                 else
                                                 {
-                                                    await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<ParameterCode, object>
+                                                    await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<byte, object>
                             {
-                                { ParameterCode.Message, "Access Denied" }
+                                { (byte)ParameterCode.Message, "Access Denied" }
                             }));
                                                 }
                                             }
                                             catch (Exception ex)
                                             {
-                                                await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<ParameterCode, object>
+                                                await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<byte, object>
                         {
-                            { ParameterCode.Message, "Error" }
+                            { (byte)ParameterCode.Message, "Error" }
                                             }));
                                             }
                                         }
@@ -213,14 +213,14 @@ public class CommandHandler
                             // Проверяем, существует ли уже логин
                             using (MySqlCommand checkCmd = new MySqlCommand("SELECT COUNT(*) FROM Accounts WHERE Login = @Login;", con))
                             {
-                                checkCmd.Parameters.AddWithValue("@Login", packet.Data[ParameterCode.Login]);
+                                checkCmd.Parameters.AddWithValue("@Login", packet.Data[(byte)ParameterCode.Login]);
                                 int existingCount = Convert.ToInt32(checkCmd.ExecuteScalar());
 
                                 if (existingCount > 0)
                                 {
-                                    await SendTo(client, new DataPacket((byte)OperationCode.Registration, new Dictionary<ParameterCode, object>
+                                    await SendTo(client, new DataPacket((byte)OperationCode.Registration, new Dictionary<byte, object>
                 {
-                    { ParameterCode.Message, "Login already exists" }
+                    { (byte)ParameterCode.Message, "Login already exists" }
                 }));
                                 }
                                 else
@@ -230,9 +230,9 @@ public class CommandHandler
                                     {
                                         client.Id = await NetId.Generate();
                                         registerCmd.Parameters.AddWithValue("@UUID", client.Id);
-                                        registerCmd.Parameters.AddWithValue("@Login", packet.Data[ParameterCode.Login]);
-                                        registerCmd.Parameters.AddWithValue("@Password", packet.Data[ParameterCode.Password]); // В реальной практике пароль должен быть хеширован
-                                        registerCmd.Parameters.AddWithValue("@Name", packet.Data[ParameterCode.Name]);
+                                        registerCmd.Parameters.AddWithValue("@Login", packet.Data[(byte)ParameterCode.Login]);
+                                        registerCmd.Parameters.AddWithValue("@Password", packet.Data[(byte)ParameterCode.Password]); // В реальной практике пароль должен быть хеширован
+                                        registerCmd.Parameters.AddWithValue("@Name", packet.Data[(byte)ParameterCode.Name]);
 
 
 
@@ -251,28 +251,28 @@ public class CommandHandler
 
 
 
-                                            await SendTo(client, new DataPacket((byte)OperationCode.Registration, new Dictionary<ParameterCode, object>
+                                            await SendTo(client, new DataPacket((byte)OperationCode.Registration, new Dictionary<byte, object>
                                         {
-                                            { ParameterCode.Name, packet.Data[ParameterCode.Name] },
-                                            { ParameterCode.Message, "Registration successful" },
-                                            { ParameterCode.Id, client.Id },
-                                            { ParameterCode.LVL, 1 },
-                                            { ParameterCode.Exp, 0 },
-                                            { ParameterCode.IconIndex, 1 },
+                                            {(byte) ParameterCode.Name, packet.Data[(byte)ParameterCode.Name] },
+                                            { (byte)ParameterCode.Message, "Registration successful" },
+                                            { (byte)ParameterCode.Id, client.Id },
+                                            { (byte)ParameterCode.LVL, 1 },
+                                            { (byte)ParameterCode.Exp, 0 },
+                                            { (byte)ParameterCode.IconIndex, 1 },
                                         }));
                                         }
                                         else
                                         {
-                                            await SendTo(client, new DataPacket((byte)OperationCode.Registration, new Dictionary<ParameterCode, object>
+                                            await SendTo(client, new DataPacket((byte)OperationCode.Registration, new Dictionary<byte, object>
                                         {
-                                            { ParameterCode.Message, "Registration failed" }
+                                            { (byte)ParameterCode.Message, "Registration failed" }
                                         }));
                                         }
                                     }
                                     using (MySqlCommand insertUserParametersCommand = new MySqlCommand("INSERT INTO UserParameters (UUID, Name, Lvl, Exp, Icon, Birth) VALUES (@UUID, @Name, @Lvl, @Exp, @Icon, @Birth)", con))
                                     {
                                         insertUserParametersCommand.Parameters.AddWithValue("@UUID", client.Data.ID);
-                                        insertUserParametersCommand.Parameters.AddWithValue("@Name", packet.Data[ParameterCode.Name]);
+                                        insertUserParametersCommand.Parameters.AddWithValue("@Name", packet.Data[(byte)ParameterCode.Name]);
                                         insertUserParametersCommand.Parameters.AddWithValue("@Lvl", 1);
                                         insertUserParametersCommand.Parameters.AddWithValue("@Exp", 0);
                                         insertUserParametersCommand.Parameters.AddWithValue("@Icon", 1);
@@ -310,9 +310,9 @@ public class CommandHandler
                             Logger.Log.Debug($"RoomUUID{World.Instance.Players[_client.Id].TeamUUID}");
                             Logger.Log.Debug($"RoomCount{World.Instance.Rooms.Count}");
                             Logger.Log.Debug($"GetAllRoom{World.Instance.GetRoom(World.Instance.Players[_client.Id].TeamUUID).UUID}");
-                            await SendTo(new DataPacket((byte)OperationCode.GetInfoRoom, new Dictionary<ParameterCode, object>
+                            await SendTo(new DataPacket((byte)OperationCode.GetInfoRoom, new Dictionary<byte, object>
                                         {
-                                            { ParameterCode.TeamMember,  World.Instance.GetRoom(World.Instance.Players[_client.Id].TeamUUID)},
+                                            { (byte)ParameterCode.TeamMember,  World.Instance.GetRoom(World.Instance.Players[_client.Id].TeamUUID)},
                                         }), packet.Flag);
                         }
                         catch (Exception ex) { Logger.Log.Error($"GetInfoRoomError: {ex}"); }
@@ -329,12 +329,12 @@ public class CommandHandler
                                             }));*/
                         try
                         {
-                            await SendTo(new DataPacket((byte)OperationCode.MyTransform, new Dictionary<ParameterCode, object>
+                            await SendTo(new DataPacket((byte)OperationCode.MyTransform, new Dictionary<byte, object>
                                         {
-                                            { ParameterCode.X, packet.Data[ParameterCode.X] },
-                                            { ParameterCode.Y, packet.Data[ParameterCode.Y] },
-                                            { ParameterCode.Z, packet.Data[ParameterCode.Z] },
-                                            { ParameterCode.Id, packet.Data[ParameterCode.Id] }
+                                            { (byte)ParameterCode.X, packet.Data[(byte)ParameterCode.X] },
+                                            { (byte)ParameterCode.Y, packet.Data[(byte)ParameterCode.Y] },
+                                            {(byte)ParameterCode.Z, packet.Data[(byte)ParameterCode.Z] },
+                                            { (byte)ParameterCode.Id, packet.Data[(byte)ParameterCode.Id] }
                                         }), packet.Flag);
                         }
                         catch (Exception ex) { Logger.Log.Error($"MyTransformError: {ex}"); }
@@ -363,10 +363,10 @@ public class CommandHandler
                             Logger.Log.Debug($"TeamSetTeamUUID{_client.TeamUUID}");
                             Logger.Log.Debug($"TeamSetMyUUID{_client.Id}");
                             Logger.Log.Debug("AddNewteam");
-                            await SendTo(new DataPacket((byte)OperationCode.SetTeam, new Dictionary<ParameterCode, object>
+                            await SendTo(new DataPacket((byte)OperationCode.SetTeam, new Dictionary<byte, object>
                                         {
-                                            { ParameterCode.TeamUUID, World.Instance.Players[_client.Id].TeamUUID },
-                                            { ParameterCode.UUID, World.Instance.Rooms[_client.TeamUUID].GetTeamMember(_client.Id) }
+                                            { (byte)ParameterCode.TeamUUID, World.Instance.Players[_client.Id].TeamUUID },
+                                            { (byte)ParameterCode.UUID, World.Instance.Rooms[_client.TeamUUID].GetTeamMember(_client.Id) }
                                         }), SendClientFlag.FullRoom);
                         }
                         catch (Exception ex) { Logger.Log.Error($"SetTeamError: {ex}"); }

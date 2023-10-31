@@ -108,12 +108,18 @@ namespace Server.Elements
         }
 
         public bool addClient(NetClient client) 
-        { 
-            return Players.TryAdd(client.Id, client);
+        {
+            if (Players.TryGetValue(client.Id, out _))
+                return Players.TryAdd(client.Id, client);
+            else
+                return false;
         }
         public bool removeClient(string Id)
         {
-            return Players.TryRemove(Id, out _);
+            if(Players.TryGetValue(Id, out _))            
+                return Players.TryRemove(Id, out _);
+            else 
+                return false;
         }
         public List<NetClient> AllWorldClients()
         {

@@ -248,7 +248,9 @@ public class GameServer
                 {
                     try
                     {
-                        World.Instance.Rooms[World.Instance.Players[player.Id].TeamUUID].RemoveUser(player.Id);
+                        Logger.Log.Debug($"TEAMID: next {player.TeamUUID}");
+                        World.Instance.Rooms[player.TeamUUID].RemoveUser(player.Id);
+                        
                         World.Instance.removeClient(player.Id);
                         Logger.Log.Debug($"{player.Id} requested disconnection");
                     }

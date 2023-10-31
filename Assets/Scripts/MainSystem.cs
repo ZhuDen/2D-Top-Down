@@ -68,11 +68,11 @@ public class MainSystem : MonoBehaviour
     }
     private async Task _authorisation( string Login, string Pass)
     {
-        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Authorisation, new Dictionary<ParameterCode, object> { { ParameterCode.Login, Login }, { ParameterCode.Password, Pass } }));
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Authorisation, new Dictionary<byte, object> { { (byte)ParameterCode.Login, Login }, { (byte)ParameterCode.Password, Pass } }));
     }
     private async Task _registration(string Login, string Pass, string Name)
     {
-        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Registration, new Dictionary<ParameterCode, object> { { ParameterCode.Login, Login }, { ParameterCode.Password, Pass }, { ParameterCode.Name, Name } }));
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Registration, new Dictionary<byte, object> { { (byte)ParameterCode.Login, Login }, { (byte)ParameterCode.Password, Pass }, { (byte)ParameterCode.Name, Name } }));
     }
 
     public void doMainThread(Action updateAction)

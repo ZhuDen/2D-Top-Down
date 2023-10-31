@@ -44,7 +44,7 @@ public static class Handled
 
                 case OperationCode.Authorisation:
 
-                    if (packet.Data[ParameterCode.Message].ToString() == "Success")
+                    if (packet.Data[(byte)ParameterCode.Message].ToString() == "Success")
                     {
 
                         OnAutorized?.Invoke();
@@ -61,26 +61,26 @@ public static class Handled
                          MainSystem.instance.doMainThread(() => UIManager.Instance.State.SwitchToPanel("AuthGood"));*/
 
                         Debug.Log($" Lvl: {MainSystem.instance.ClientData.Lvl}");
-                        Debug.Log($"Authorisation {packet.Data[ParameterCode.Name].ToString()}");
-                        Debug.Log("ID: " + packet.Data[ParameterCode.Id].ToString());
-                        TransportHandler.Transport.Id = packet.Data[ParameterCode.Id].ToString();
+                        Debug.Log($"Authorisation {packet.Data[(byte)ParameterCode.Name].ToString()}");
+                        Debug.Log("ID: " + packet.Data[(byte)ParameterCode.Id].ToString());
+                        TransportHandler.Transport.Id = packet.Data[(byte)ParameterCode.Id].ToString();
                     }
                     else
                     {
-                        Debug.Log(packet.Data[ParameterCode.Message]);
+                        Debug.Log(packet.Data[(byte)ParameterCode.Message]);
                         MainSystem.instance.doMainThread(() => UIManager.Instance.State.SwitchToPanel("Login"));
                     }
                     break;
 
                 case OperationCode.Registration:
 
-                    if (packet.Data[ParameterCode.Message].ToString() == "Registration successful")
+                    if (packet.Data[(byte)ParameterCode.Message].ToString() == "Registration successful")
                     {
-                        MainSystem.instance.ClientData.Name = packet.Data[ParameterCode.Name].ToString();
-                        MainSystem.instance.ClientData.ID = packet.Data[ParameterCode.Id].ToString();
-                        MainSystem.instance.ClientData.Icon = packet.Data[ParameterCode.IconIndex].ToString();
-                        MainSystem.instance.ClientData.Lvl = packet.Data[ParameterCode.LVL].ToString();
-                        MainSystem.instance.ClientData.Exp = packet.Data[ParameterCode.Exp].ToString();
+                        MainSystem.instance.ClientData.Name = packet.Data[(byte)ParameterCode.Name].ToString();
+                        MainSystem.instance.ClientData.ID = packet.Data[(byte)ParameterCode.Id].ToString();
+                        MainSystem.instance.ClientData.Icon = packet.Data[(byte)ParameterCode.IconIndex].ToString();
+                        MainSystem.instance.ClientData.Lvl = packet.Data[(byte)ParameterCode.LVL].ToString();
+                        MainSystem.instance.ClientData.Exp = packet.Data[(byte)ParameterCode.Exp].ToString();
                         /*  MainSystem.instance.doMainThread(() => UIManager.Instance.Name.text = MainSystem.instance.ClientData.Name);
                           MainSystem.instance.doMainThread(() => UIManager.Instance.UUID.text = "UUID: " + MainSystem.instance.ClientData.ID);
                           MainSystem.instance.doMainThread(() => UIManager.Instance.Exp.text = MainSystem.instance.ClientData.Exp);
@@ -92,7 +92,7 @@ public static class Handled
                     }
                     else
                     {
-                        Debug.Log(packet.Data[ParameterCode.Message]);
+                        Debug.Log(packet.Data[(byte)ParameterCode.Message]);
                         MainSystem.instance.doMainThread(() => UIManager.Instance.State.SwitchToPanel("Registration"));
                     }
                     break;
@@ -108,8 +108,8 @@ public static class Handled
                 case OperationCode.Message:
                     if (packet.Data != null)
                     {
-                        string message = packet.Data[ParameterCode.Message].ToString();
-                        MainSystem.instance.doMainThread(() => OnGetString?.Invoke(message, packet.Data[ParameterCode.Id].ToString()));
+                        string message = packet.Data[(byte)ParameterCode.Message].ToString();
+                        MainSystem.instance.doMainThread(() => OnGetString?.Invoke(message, packet.Data[(byte)ParameterCode.Id].ToString()));
                     }
                     else
                     {
@@ -118,39 +118,39 @@ public static class Handled
                     break;
 
                 case OperationCode.Connect:
-                    Debug.Log($"Connected: {packet.Data[ParameterCode.Message].ToString()}");
+                    Debug.Log($"Connected: {packet.Data[(byte)ParameterCode.Message].ToString()}");
                     //  MainSystem.instance.ClientData.ID = packet.Data[ParameterCode.Id].ToString();
                     MainSystem.instance.doMainThread(() => OnConnected?.Invoke());
 
                     break;
                 case OperationCode.SetTeam:
                     Debug.Log("New con");
-                    TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.GetInfoRoom, new Dictionary<ParameterCode, object> { { ParameterCode.Message, "Update" } }, SendClientFlag.FullRoom));
+                    TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.GetInfoRoom, new Dictionary<byte, object> { { (byte)ParameterCode.Message, "Update" } }, SendClientFlag.FullRoom));
 
                     break;
                 case OperationCode.GetInfoRoom:
-                    Debug.Log($"UUID {((Room)packet.Data[ParameterCode.TeamMember]).Team[0].netClient.Id}");
+                    Debug.Log($"UUID {((Room)packet.Data[(byte)ParameterCode.TeamMember]).Team[0].netClient.Id}");
                     
 
                     if (MainSystem.instance.MyRoom != null)
                     {
-                        if (((Room)packet.Data[ParameterCode.TeamMember]).UUID == MainSystem.instance.MyRoom.UUID)
+                        if (((Room)packet.Data[(byte)ParameterCode.TeamMember]).UUID == MainSystem.instance.MyRoom.UUID)
                         {
-                            MainSystem.instance.MyRoom = (Room)packet.Data[ParameterCode.TeamMember];
+                            MainSystem.instance.MyRoom = (Room)packet.Data[(byte)ParameterCode.TeamMember];
                         }
-                        MainSystem.instance.doMainThread(() => OnGetPlayers?.Invoke(((Room)packet.Data[ParameterCode.TeamMember]).Team));
+                        MainSystem.instance.doMainThread(() => OnGetPlayers?.Invoke(((Room)packet.Data[(byte)ParameterCode.TeamMember]).Team));
                     }
                     else
                     {
-                        MainSystem.instance.MyRoom = (Room)packet.Data[ParameterCode.TeamMember];
-                        MainSystem.instance.doMainThread(() => OnGetPlayers?.Invoke(((Room)packet.Data[ParameterCode.TeamMember]).Team));
+                        MainSystem.instance.MyRoom = (Room)packet.Data[(byte)ParameterCode.TeamMember];
+                        MainSystem.instance.doMainThread(() => OnGetPlayers?.Invoke(((Room)packet.Data[(byte)ParameterCode.TeamMember]).Team));
                         Debug.Log($"Count{ MainSystem.instance.MyRoom.Team.Count}");
                     }
 
 
                     break;
                 case OperationCode.MyTransform:
-                    OnGetMessage?.Invoke(new Vector3(float.Parse(packet.Data[ParameterCode.X].ToString()), float.Parse(packet.Data[ParameterCode.Y].ToString()), float.Parse(packet.Data[ParameterCode.Z].ToString())), packet.Data[ParameterCode.Id].ToString());
+                    OnGetMessage?.Invoke(new Vector3(float.Parse(packet.Data[(byte)ParameterCode.X].ToString()), float.Parse(packet.Data[(byte)ParameterCode.Y].ToString()), float.Parse(packet.Data[(byte)ParameterCode.Z].ToString())), packet.Data[(byte)ParameterCode.Id].ToString());
 
                     break;
 
@@ -158,7 +158,7 @@ public static class Handled
                     Debug.Log("CLIENTS INFO");
                     try
                     {
-                        MainSystem.instance.ClientData = (ClientData)packet.Data[ParameterCode.Client];
+                        MainSystem.instance.ClientData = (ClientData)packet.Data[(byte)ParameterCode.Client];
                     }
                     catch (Exception ex) { }
                     Debug.Log($"Hello {MainSystem.instance.ClientData.ID} {MainSystem.instance.ClientData.NetTransform.Position.x}");
@@ -171,9 +171,9 @@ public static class Handled
         }
         else {
 
-            if (packet.Data.ContainsKey(ParameterCode.Message))
+            if (packet.Data.ContainsKey((byte)ParameterCode.Message))
             {
-                MainSystem.instance.doMainThread(() => OnGetString?.Invoke(packet.Data[ParameterCode.Message].ToString(), packet.Data[ParameterCode.Id].ToString()));
+                MainSystem.instance.doMainThread(() => OnGetString?.Invoke(packet.Data[(byte)ParameterCode.Message].ToString(), packet.Data[(byte)ParameterCode.Id].ToString()));
             }
 
             Debug.Log($"RPC REQUEST: { packet.Data.Keys}");

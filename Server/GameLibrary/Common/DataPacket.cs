@@ -23,13 +23,13 @@ namespace GameLibrary.Common
         [DataMember]
         public byte operationCode { get; set; }
         [DataMember]
-        public System.Collections.Generic.Dictionary<GameLibrary.Common.ParameterCode, object> Data { get; set; }
+        public System.Collections.Generic.Dictionary<byte, object> Data { get; set; }
         [DataMember]
         public GameLibrary.Common.SendClientFlag Flag { get; set; }
         [DataMember]
         public bool Rpc { get; set; }
 
-        public DataPacket(byte sendParameters, System.Collections.Generic.Dictionary<GameLibrary.Common.ParameterCode, object> data, SendClientFlag flag = SendClientFlag.Me, bool rpc = false)
+        public DataPacket(byte sendParameters, System.Collections.Generic.Dictionary<byte, object> data, SendClientFlag flag = SendClientFlag.Me, bool rpc = false)
         {
             Data = data;
             operationCode = sendParameters;

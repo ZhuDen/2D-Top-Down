@@ -69,15 +69,19 @@ namespace GameLibrary.Extension
 
             try
             {
-                TeamMember itemToRemove = Team.Single(r => r.netClient.Id == UUID);
+                TeamMember itemToRemove = new TeamMember();
+                itemToRemove.Name = "NO";
+                itemToRemove = Team.Single(r => r.netClient.Id == UUID);
+                if (itemToRemove.Name != "NO")
+                {
+                    if (itemToRemove.Team == 1)
+                        Team1Members--;
+                    else
+                    if (itemToRemove.Team == 2)
+                        Team2Members--;
 
-                if (itemToRemove.Team == 1)
-                    Team1Members--;
-                else
-                if (itemToRemove.Team == 2)
-                    Team2Members--;
-
-                Team.Remove(itemToRemove);
+                    Team.Remove(itemToRemove);
+                }
             }
             catch (Exception ex) {  }
         }
