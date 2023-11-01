@@ -37,7 +37,7 @@ public class SynchronizeTransfrom : MonoBehaviour
         if (Vector3.Distance(transform.position, NewPos) < 2f)
         {
             transform.position = Vector3.Lerp(transform.position, new Vector3(NewPos.x, NewPos.y, 0), 10f * Time.deltaTime);
-          //  transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0f, 0f, AngleZ), 10f * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0f, 0f, AngleZ), 20f * Time.deltaTime);
         }
         else
         {
@@ -47,7 +47,7 @@ public class SynchronizeTransfrom : MonoBehaviour
 
     async void SendMess()
     {
-        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.MyTransform, new Dictionary<byte, object> { { (byte)ParameterCode.X, transform.position.x }, { (byte)ParameterCode.Y, transform.position.y }, { (byte)ParameterCode.Z, transform.rotation.z }, { (byte)ParameterCode.Id, TransportHandler.Transport.Id } }, SendClientFlag.All));
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.MyTransform, new Dictionary<byte, object> { { (byte)ParameterCode.X, transform.position.x }, { (byte)ParameterCode.Y, transform.position.y }, { (byte)ParameterCode.Z, transform.eulerAngles.z }, { (byte)ParameterCode.Id, TransportHandler.Transport.Id } }, SendClientFlag.All));
     }
 
     private void OnGetPos(Vector3 pos, string _id)
@@ -55,7 +55,9 @@ public class SynchronizeTransfrom : MonoBehaviour
         if (playerControl.isMinePlayer.ID == _id)
         {
             NewPos = pos;
-           // AngleZ = pos.z;
+            AngleZ = pos.z;
+            // fixed bug teleportation player
+            NewPos.z = 0;
         }
 
     }

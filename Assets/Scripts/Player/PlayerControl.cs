@@ -46,7 +46,7 @@ public class PlayerControl : MonoBehaviour
 
         CameraTransform = Camera.main.transform;
         PlayerTransform = this.transform;
-        UISpawner.Instance.SpawnSkills(MySkills);
+        UISpawner.Instance.SpawnSkills(MySkills, this);
     }
 
     void Update()

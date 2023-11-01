@@ -10,11 +10,23 @@ public class SynchronizeStats : MonoBehaviour
     public float Multipler;
     public Image FillHP;
     public string Name;
+    public Text TextNick;
     public PlayerControl playerControl;
+
+    private void Start()
+    {
+        if (playerControl.isMinePlayer.IsMine())
+        {
+            TextNick.text = MainSystem.instance.NameNick;
+            SendNick();
+        }
+    }
 
     private void OnEnable()
     {
         GameManager.OnTransUpdate += OnServerSinc;
+        Handled.OnUpdateNick += OnUpdateNick;
+        Handled.OnNewPlayerConnected += OnNewPlayerConnected;
         Handled.OnGetString += OnGetString;
 
     }
@@ -22,6 +34,8 @@ public class SynchronizeStats : MonoBehaviour
     private void OnDisable()
     {
         GameManager.OnTransUpdate -= OnServerSinc;
+        Handled.OnUpdateNick -= OnUpdateNick;
+        Handled.OnNewPlayerConnected -= OnNewPlayerConnected;
         Handled.OnGetString -= OnGetString;
 
     }
@@ -32,6 +46,11 @@ public class SynchronizeStats : MonoBehaviour
         {
             FillHP.fillAmount = 0.01f * HP;
         }
+    }
+
+    public void OnNewPlayerConnected ()
+    {
+        SendNick();
     }
 
     public void OnServerSinc ()
@@ -45,6 +64,7 @@ public class SynchronizeStats : MonoBehaviour
             }
             //тут надо подумать как каждый раз не отправлять
             SendHP();
+            SendNick();
         }
     }
 
@@ -53,9 +73,14 @@ public class SynchronizeStats : MonoBehaviour
         await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<byte, object> { { (byte)ParameterCode.Message, HP.ToString() + "|" + Multipler }, { (byte)ParameterCode.Id, TransportHandler.Transport.Id } }, SendClientFlag.All, true));
     }
 
+    async void SendNick()
+    {
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<byte, object> { { (byte)MyParameters.NickName, MainSystem.instance.NameNick }, { (byte)ParameterCode.Id, TransportHandler.Transport.Id } }, SendClientFlag.All, true));
+    }
+
     private void OnGetString(string _res, string _id)
     {
-        
+       // Debug.Log(playerControl.isMinePlayer.ID + " || " +_id);
         if (playerControl.isMinePlayer.ID == _id)
         {
             if (!playerControl.isMinePlayer.IsMine())
@@ -67,4 +92,18 @@ public class SynchronizeStats : MonoBehaviour
         }
 
     }
+
+    private void OnUpdateNick(string _res, string _id)
+    {
+        Debug.Log(_res + " || " + _id);
+        if (playerControl.isMinePlayer.ID == _id)
+        {
+            if (!playerControl.isMinePlayer.IsMine())
+            {
+                TextNick.text = _res;
+            }
+
+        }
+    }
+
 }

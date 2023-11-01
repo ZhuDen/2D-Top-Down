@@ -36,7 +36,7 @@ public class UIManager : MonoBehaviour
         }
         else if (State.CurrentKey == "Registration")
         {
-            MainSystem.instance.Registration(LoginUI.text, PasswordUI.text, NameUI.text);
+            MainSystem.instance.Registration(LoginUI.text, PasswordUI.text, "");
            // State.SwitchToPanel("Wait");
         }
 
@@ -45,6 +45,6 @@ public class UIManager : MonoBehaviour
     public void SetName() {
 
         Debug.Log("HEllo");
-        Name.text = MainSystem.instance.Name;
+        Name.text = MainSystem.instance.NameNick;
     }
 }

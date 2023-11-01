@@ -142,7 +142,7 @@ public class Skill_Control : MonoBehaviour
             MyPlayerControl.playerStats.UpdateMana(skillsParameters.NeedMana, PlayerStats.TypeSummation.Minus);
         }
 
-        if (TypeSkill == TypeSkills.AmedByPoint)
+       /* if (TypeSkill == TypeSkills.AmedByPoint)
         {
             MyPlayerControl.playerAnimatorControl.SetElectricSkill();
             Vector2 posMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -153,7 +153,7 @@ public class Skill_Control : MonoBehaviour
         {
             GameObject skill = Instantiate(PrefabSkillGM, MyPlayerControl.transform.position, PrefabSkillGM.transform.rotation);
             MyPlayerControl.transform.position = new Vector3(MyPlayerControl.transform.position.x + Random.Range(-8f, 8f), MyPlayerControl.transform.position.y + Random.Range(-8f, 8f), 0);
-        }
+        }*/
         StartReload();
     }
 

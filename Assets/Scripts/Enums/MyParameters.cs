@@ -8,6 +8,8 @@ using System.Text;
     public enum MyParameters : byte
     {
         KeyName,
-        Ping
+        Ping,
+        NickName,
+        UseSkill
     }
 

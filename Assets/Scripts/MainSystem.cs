@@ -11,12 +11,12 @@ using GameLibrary.Extension;
 public class MainSystem : MonoBehaviour
 {
     public static MainSystem instance;
-    public string Name;
+    public string NameNick;
     public string UUID;
     public ClientData ClientData;
     public Room MyRoom;
 
-    public InputField LogingField, PaswordField;
+    public InputField LogingField, PaswordField, NickNameText;
 
     internal void doMainThread(object v)
     {
@@ -50,6 +50,7 @@ public class MainSystem : MonoBehaviour
 
     public void ClickButAutorisation()
     {
+        NameNick = NickNameText.text;
         Autorisation(LogingField.text, PaswordField.text);
     }
 

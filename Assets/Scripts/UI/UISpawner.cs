@@ -22,7 +22,7 @@ public class UISpawner : MonoBehaviour
             Instance = this;
     }
 
-    public void SpawnSkills (GameObject[] _skills)
+    public void SpawnSkills (GameObject[] _skills, PlayerControl _playerControl)
     {
         for (int i = 0; i < _skills.Length; i++)
         {

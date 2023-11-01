@@ -17,7 +17,7 @@ public class PlayerStats : MonoBehaviour
 
     private Text TextCountHP, TextCountMana;
     public Text TextRegenHP, TextRegenMana;
-    public Image ImageFillHP, ImageFillMana;
+    public Image ImageFillHP, ImageFillHPMini, ImageFillMana;
     public float MultiplerFillMana, MultiplerFillHP;
     private float TmRegen;
 
@@ -107,10 +107,9 @@ public class PlayerStats : MonoBehaviour
                 CountMana = MaxMana;
             }
 
-            UpdateUIStats();
             TmRegen = 0f;
         }
-
+        UpdateUIStats();
 
 
     }
@@ -159,10 +158,11 @@ public class PlayerStats : MonoBehaviour
         if (playerControl.isMinePlayer.IsMine())
         {
             TextCountHP.text = string.Format("{0}/{1}", CountHP, MaxHP);
-            ImageFillHP.fillAmount = MultiplerFillHP * CountHP;
+            ImageFillHP.fillAmount = Mathf.Lerp(ImageFillHP.fillAmount, MultiplerFillHP * CountHP, 5f * Time.deltaTime);
+            ImageFillHPMini.fillAmount = Mathf.Lerp(ImageFillHPMini.fillAmount, MultiplerFillHP * CountHP, 5f * Time.deltaTime);
 
             TextCountMana.text = string.Format("{0}/{1}", CountMana, MaxMana);
-            ImageFillMana.fillAmount = MultiplerFillMana * CountMana;
+            ImageFillMana.fillAmount = Mathf.Lerp(ImageFillMana.fillAmount, MultiplerFillMana * CountMana, 10f * Time.deltaTime);
         }
     }
 

@@ -23,6 +23,15 @@ public static class Handled
     public delegate void Connected();
     public static event Connected OnConnected;
 
+    public delegate void NewPlayerConnected();
+    public static event NewPlayerConnected OnNewPlayerConnected;
+
+    public delegate void UpdateNick(string _res, string id);
+    public static event UpdateNick OnUpdateNick;
+
+    public delegate void SpawnSkill(string _typeSkill, string id);
+    public static event SpawnSkill OnSpawnSkill;
+
     public delegate void GetPlayers(List<TeamMember> _players);
     public static event GetPlayers OnGetPlayers;
 
@@ -104,9 +113,12 @@ public static class Handled
                 case OperationCode.SetDamage:
                     //SendScript.Instance.Data = ((ClientData)packet.Data[ParameterCode.Count]).Massive.Length;
                     break;
+                case OperationCode.Name:
+                   // MainSystem.instance.doMainThread(() => OnUpdateNick?.Invoke(packet.Data[(byte)ParameterCode.Message].ToString(), packet.Data[(byte)ParameterCode.Id].ToString()));
+                    break;
 
                 case OperationCode.Message:
-                   /* if (packet.Data != null)
+                    if (packet.Data != null)
                     {
                         Debug.Log("11111");
                         if (packet.Data.ContainsKey((byte)MyParameters.Ping))
@@ -125,7 +137,7 @@ public static class Handled
                     else
                     {
                         Debug.Log($"Received message: Null");
-                    }*/
+                    }
                     break;
 
                 case OperationCode.Connect:
@@ -136,6 +148,7 @@ public static class Handled
                     break;
                 case OperationCode.SetTeam:
                     Debug.Log("New con");
+                     MainSystem.instance.doMainThread(() => OnNewPlayerConnected?.Invoke());
                     TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.GetInfoRoom, new Dictionary<byte, object> { { (byte)ParameterCode.Message, "Update" } }, SendClientFlag.FullRoom));
 
                     break;
@@ -182,28 +195,21 @@ public static class Handled
         }
         else {
 
-            if (packet.Data.ContainsKey((byte)MyParameters.Ping))
+            if (packet.Data.ContainsKey((byte)ParameterCode.Message))
             {
-                //MainSystem.instance.doMainThread(() => OnGetString?.Invoke(packet.Data[(byte)ParameterCode.Message].ToString(), packet.Data[(byte)ParameterCode.Id].ToString()));
-                if (packet.Data != null)
-                {
-                    Debug.Log("11111");
-                    if (packet.Data.ContainsKey((byte)MyParameters.Ping))
-                    {
-                        Debug.Log("2222");
-                        if (packet.Data[(byte)MyParameters.Ping].ToString() == "Ping")
-                        {
-                            Debug.Log("3333");
-                            MainSystem.instance.doMainThread(() => GameManager.Instance.UpdatePing());
-                        }
-                    }
-
-                    // string message = packet.Data[(byte)ParameterCode.Message].ToString();
-                    //  MainSystem.instance.doMainThread(() => OnGetString?.Invoke(message, packet.Data[(byte)ParameterCode.Id].ToString()));
-                }
+                MainSystem.instance.doMainThread(() => OnGetString?.Invoke(packet.Data[(byte)ParameterCode.Message].ToString(), packet.Data[(byte)ParameterCode.Id].ToString()));
+            }
+            if (packet.Data.ContainsKey((byte)MyParameters.NickName))
+            {
+               // Debug.Log("Nick: " + packet.Data[(byte)MyParameters.NickName].ToString());
+                MainSystem.instance.doMainThread(() => OnUpdateNick?.Invoke(packet.Data[(byte)MyParameters.NickName].ToString(), packet.Data[(byte)ParameterCode.Id].ToString()));
+            }
+            if (packet.Data.ContainsKey((byte)MyParameters.UseSkill))
+            {
+                MainSystem.instance.doMainThread(() => OnSpawnSkill?.Invoke(packet.Data[(byte)MyParameters.UseSkill].ToString(), packet.Data[(byte)ParameterCode.Id].ToString()));
             }
 
-            Debug.Log($"RPC REQUEST: { packet.Data.Keys}");
+            // Debug.Log($"RPC REQUEST: { packet.Data.Keys}");
 
         }
 

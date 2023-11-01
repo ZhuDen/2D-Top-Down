@@ -362,6 +362,7 @@ GameObject:
   - component: {fileID: 8799136869962161292}
   - component: {fileID: 8799136869962161289}
   - component: {fileID: 6414819713455222253}
+  - component: {fileID: 2799645602318333275}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -472,7 +473,28 @@ MonoBehaviour:
   Multipler: 0
   FillHP: {fileID: 3344712925093756742}
   Name: 
+  TextNick: {fileID: 3299323928650976324}
   playerControl: {fileID: 8799136869962161294}
+--- !u!114 &2799645602318333275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8799136869962161329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c6b802b868335e4586fcabfb9254958, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MyPlayerControl: {fileID: 8799136869962161294}
+  AllSkills:
+  - SkillName: ElectricBall
+    PrefabsSkills: {fileID: 7839459750025855479, guid: 9858df66a09a67d4d90db31e9fff1758, type: 3}
+  - SkillName: FireBall
+    PrefabsSkills: {fileID: 8734062140575209383, guid: b17fd651dc9e06544b317dffa8e192e0, type: 3}
+  - SkillName: SmokeBlink
+    PrefabsSkills: {fileID: 5046280036631044564, guid: 1708e22464bf77349933e7c8e23e2553, type: 3}
 --- !u!1 &8799136870108350358
 GameObject:
   m_ObjectHideFlags: 0
@@ -6045,10 +6067,17 @@ MonoBehaviour:
   MyIcon: {fileID: 21300000, guid: 881b74eec5df34842a237b528e654560, type: 3}
   MaxHP: 150
   MaxMana: 140
+  CountHP: 0
+  CountMana: 0
   CountRegenMana: 2
   CountRegenHP: 3
   TextRegenHP: {fileID: 0}
   TextRegenMana: {fileID: 0}
+  ImageFillHP: {fileID: 0}
+  ImageFillHPMini: {fileID: 3344712925093756742}
+  ImageFillMana: {fileID: 0}
+  MultiplerFillMana: 0
+  MultiplerFillHP: 0
   playerControl: {fileID: 8799136869962161294}
 --- !u!1 &9170164622488632575 stripped
 GameObject:
