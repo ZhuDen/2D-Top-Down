@@ -121,76 +121,83 @@ public class CommandHandler
                                         {
                                             try
                                             {
-
-                                                if (reader["Login"].ToString() == packet.Data[(byte)ParameterCode.Login].ToString() &&
-                                                    reader["Password"].ToString() == packet.Data[(byte)ParameterCode.Password].ToString())
+                                                if (!World.Instance.Players.ContainsKey(reader["UUID"].ToString()))
                                                 {
-                                                    client.Id = reader["UUID"].ToString();
-                                                    client.Data = new ClientData();
-                                                    client.Data.ID = client.Id;
 
-                                                    using (MySqlConnection con1 = new MySqlConnection(DB.pathsql))
+                                                    if (reader["Login"].ToString() == packet.Data[(byte)ParameterCode.Login].ToString() &&
+                                                    reader["Password"].ToString() == packet.Data[(byte)ParameterCode.Password].ToString())
                                                     {
-                                                        con1.Open();
-                                                        using (MySqlCommand infoCmd = new MySqlCommand(
-                                                            "SELECT UP.UUID, UP.Name, UP.Lvl, UP.Exp, UI.IconID, I.Name AS IconName, I.URL AS IconURL, I.Description AS Description " +
-                                                            "FROM UserParameters UP " +
-                                                            "LEFT JOIN UserIcons UI ON UP.UUID = UI.UUID " +
-                                                            "LEFT JOIN Icons I ON UI.IconID = I.id " +
-                                                            "WHERE UP.UUID = @UUID;", con1))
+                                                    
+                                                        client.Id = reader["UUID"].ToString();
+                                                        client.Data = new ClientData();
+                                                        client.Data.ID = client.Id;
+
+                                                        using (MySqlConnection con1 = new MySqlConnection(DB.pathsql))
                                                         {
-                                                            infoCmd.Parameters.AddWithValue("@UUID", client.Data.ID);
-
-                                                            using (MySqlDataReader infoReader = infoCmd.ExecuteReader())
+                                                            con1.Open();
+                                                            using (MySqlCommand infoCmd = new MySqlCommand(
+                                                                "SELECT UP.UUID, UP.Name, UP.Lvl, UP.Exp, UI.IconID, I.Name AS IconName, I.URL AS IconURL, I.Description AS Description " +
+                                                                "FROM UserParameters UP " +
+                                                                "LEFT JOIN UserIcons UI ON UP.UUID = UI.UUID " +
+                                                                "LEFT JOIN Icons I ON UI.IconID = I.id " +
+                                                                "WHERE UP.UUID = @UUID;", con1))
                                                             {
-                                                                while (infoReader.Read())
+                                                                infoCmd.Parameters.AddWithValue("@UUID", client.Data.ID);
+
+                                                                using (MySqlDataReader infoReader = infoCmd.ExecuteReader())
                                                                 {
+                                                                    while (infoReader.Read())
+                                                                    {
 
-                                                                    client.Data.Name = infoReader["Name"].ToString();
-                                                                    client.Data.Icon = infoReader["IconID"].ToString();
-                                                                    client.Data.Exp = infoReader["Exp"].ToString();
-                                                                    client.Data.Lvl = infoReader["Lvl"].ToString();
-                                                                    //string iconName = infoReader["IconName"].ToString();
-                                                                    //string iconURL = infoReader["IconURL"].ToString();
-                                                                    //string iconDescription = infoReader["Description"].ToString();
+                                                                        client.Data.Name = infoReader["Name"].ToString();
+                                                                        client.Data.Icon = infoReader["IconID"].ToString();
+                                                                        client.Data.Exp = infoReader["Exp"].ToString();
+                                                                        client.Data.Lvl = infoReader["Lvl"].ToString();
+                                                                        //string iconName = infoReader["IconName"].ToString();
+                                                                        //string iconURL = infoReader["IconURL"].ToString();
+                                                                        //string iconDescription = infoReader["Description"].ToString();
 
+                                                                    }
                                                                 }
                                                             }
                                                         }
-                                                    }
 
-                                                    //добавляем в world
-                                                    if (!World.Instance.Players.TryAdd(client.Id, client))
+                                                        //добавляем в world
+                                                        if (!World.Instance.Players.TryAdd(client.Id, client))
+                                                        {
+                                                            Logger.Log.Debug($"Failed to add player {client.Id} to the player list.");
+                                                            client.Socket.Close();
+                                                            continue;
+                                                        }
+                                                        Logger.Log.Debug($"ID: {client.Id} Count: {World.Instance.Players.Count} ");
+                                                        await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<byte, object>
+                                                        {
+                                                            { (byte)ParameterCode.Name, client.Data.Name },
+                                                            { (byte)ParameterCode.Message, "Success" },
+                                                            { (byte)ParameterCode.Id, client.Data.ID },
+                                                            { (byte)ParameterCode.LVL, client.Data.Lvl },
+                                                            { (byte)ParameterCode.Exp, client.Data.Exp },
+                                                            { (byte)ParameterCode.IconIndex, client.Data.Icon
+                                                        }}));
+                                                    }
+                                                    else 
                                                     {
-                                                        Logger.Log.Debug($"Failed to add player {client.Id} to the player list.");
-                                                        client.Socket.Close();
-                                                        continue;
-                                                    }
-                                                    Logger.Log.Debug($"ID: {client.Id} Count: {World.Instance.Players.Count} ");
-                                                    await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<byte, object>
-                                                {
-                                { (byte)ParameterCode.Name, client.Data.Name },
-                                { (byte)ParameterCode.Message, "Success" },
-                                { (byte)ParameterCode.Id, client.Data.ID },
-                                { (byte)ParameterCode.LVL, client.Data.Lvl },
-                                { (byte)ParameterCode.Exp, client.Data.Exp },
-                                { (byte)ParameterCode.IconIndex, client.Data.Icon }
+                                                        await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<byte, object>{{ (byte)ParameterCode.Message, "Access Denied" }}));
 
-                                                }));
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<byte, object>
-                            {
-                                { (byte)ParameterCode.Message, "Access Denied" }
-                            }));
+                                                    await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<byte, object>{{ (byte)ParameterCode.Message, "Error: Client is already authorized" } }));
+                                                    await SendTo(World.Instance.getClient(reader["UUID"].ToString()), new DataPacket((byte)OperationCode.Message, new Dictionary<byte, object> { { (byte)ParameterCode.Message, "Произошла попытка входа в ваш аккаунт! Если это не вы, срочно измените пароль!!!" } }));
                                                 }
+                                                
                                             }
                                             catch (Exception ex)
                                             {
                                                 await SendTo(client, new DataPacket((byte)OperationCode.Authorisation, new Dictionary<byte, object>
-                        {
-                            { (byte)ParameterCode.Message, "Error" }
+                                            {
+                                                { (byte)ParameterCode.Message, "Error" }
                                             }));
                                             }
                                         }
