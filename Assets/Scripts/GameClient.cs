@@ -76,7 +76,7 @@ public class GameClient : MonoBehaviour
 
     private async Task Connection()
     {
-        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Connect, new Dictionary<byte, object> { { (byte)ParameterCode.Message, "Connection" } }));
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Connect, new Dictionary<object, object> { { (byte)ParameterCode.Message, "Connection" } }));
     }
 
     /*private async Task StartReceiving()
@@ -155,7 +155,7 @@ public class GameClient : MonoBehaviour
 
     private void OnDestroy()
     {
-        TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Disconnect, new Dictionary<byte, object> { { (byte)ParameterCode.Message, "Desconnected" } }, SendClientFlag.Me));
+        TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Disconnect, new Dictionary<object, object> { { (byte)ParameterCode.Message, "Desconnected" } }, SendClientFlag.Me));
         reseiv.Dispose();
         clientSocket?.Disconnect(false);
         clientSocket?.Dispose();

@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.SetTeam, new Dictionary<byte, object> { { (byte)ParameterCode.Message, "SetTeam" } }, SendClientFlag.Me));
+        TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.SetTeam, new Dictionary<object, object> { { (byte)ParameterCode.Message, "SetTeam" } }, SendClientFlag.Me));
     }
 
     private void OnEnable()
@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
     {
         Handled.OnGetPlayers -= OnGetPlayers;
 
-        TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Disconnect, new Dictionary<byte, object> { { (byte)ParameterCode.Message, "Desconnected" } }, SendClientFlag.Me));
+        TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Disconnect, new Dictionary<object, object> { { (byte)ParameterCode.Message, "Desconnected" } }, SendClientFlag.Me));
 
     }
 
@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
     async void SendPingTest ()
     {
         dateTimeOld = DateTime.Now;
-        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<byte, object> { { (byte)MyParameters.Ping, "Ping" }}, SendClientFlag.Me, true));
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<object, object> { { (byte)MyParameters.Ping, "Ping" }}, SendClientFlag.Me, true));
 
     }
 

@@ -45,7 +45,19 @@ public static class Handled
 
         if (packet.Rpc == false)
         {
-            switch ((OperationCode)packet.operationCode)
+            OperationCode Operation = OperationCode.Unknown;
+            if (packet.Header != null)
+            {
+                Operation = (OperationCode)packet.Header.OperationCode;
+            }
+            else
+            {
+
+                Operation = (OperationCode)packet.operationCode;
+
+            }
+
+            switch (Operation)
             {
                 case OperationCode.Unknown:
                     Debug.Log("Unknown command received: " + packet.operationCode.ToString());
@@ -149,7 +161,7 @@ public static class Handled
                 case OperationCode.SetTeam:
                     Debug.Log("New con");
                      MainSystem.instance.doMainThread(() => OnNewPlayerConnected?.Invoke());
-                    TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.GetInfoRoom, new Dictionary<byte, object> { { (byte)ParameterCode.Message, "Update" } }, SendClientFlag.FullRoom));
+                    TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.GetInfoRoom, new Dictionary<object, object> { { (byte)ParameterCode.Message, "Update" } }, SendClientFlag.FullRoom));
 
                     break;
                 case OperationCode.GetInfoRoom:

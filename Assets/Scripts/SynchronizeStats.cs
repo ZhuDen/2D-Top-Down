@@ -70,12 +70,12 @@ public class SynchronizeStats : MonoBehaviour
 
     async void SendHP()
     {
-        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<byte, object> { { (byte)ParameterCode.Message, HP.ToString() + "|" + Multipler }, { (byte)ParameterCode.Id, TransportHandler.Transport.Id } }, SendClientFlag.All, true));
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<object, object> { { (byte)ParameterCode.Message, HP.ToString() + "|" + Multipler }, { (byte)ParameterCode.Id, TransportHandler.Transport.Id } }, SendClientFlag.All, true));
     }
 
     async void SendNick()
     {
-        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<byte, object> { { (byte)MyParameters.NickName, MainSystem.instance.NameNick }, { (byte)ParameterCode.Id, TransportHandler.Transport.Id } }, SendClientFlag.All, true));
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.Message, new Dictionary<object, object> { { (byte)MyParameters.NickName, MainSystem.instance.NameNick }, { (byte)ParameterCode.Id, TransportHandler.Transport.Id } }, SendClientFlag.All, true));
     }
 
     private void OnGetString(string _res, string _id)

@@ -6,6 +6,7 @@ using GameLibrary.Tools;
 using GameLibrary.Common;
 using GameLibrary.Extension;
 using GameLibrary.SocketServer;
+using System.Linq;
 
 namespace GameLibrary.Common
 {
@@ -40,10 +41,10 @@ namespace GameLibrary.Common
         /// <param name="flag">Флаг получаетя пакета</param>
         /// <param name="rpc">Если установлен в True, содержимое пакета не будет отслеживаться сервером</param>
         /// <returns>Метода поддерживаетя, но устарел, используйте TransportHeader для конфигурирования параметров пакета</returns>
-        public DataPacket(byte sendParameters, System.Collections.Generic.Dictionary<byte, object> data, SendClientFlag flag = SendClientFlag.Me, bool rpc = false)
+        public DataPacket( object sendParameters, System.Collections.Generic.Dictionary<object, object> data, SendClientFlag flag = SendClientFlag.Me, bool rpc = false)
         {
-            Data = data;
-            operationCode = sendParameters;
+            Data = data.ToDictionary(k => (byte)k.Key, k => k.Value);
+            operationCode = (byte)sendParameters;
             Flag = flag;
             Rpc = rpc;
         }
@@ -53,12 +54,17 @@ namespace GameLibrary.Common
         /// </summary>
         /// <param name="header">Заголовок отправляемог опакета, хранит параметры пакета</param>
         /// <param name="data">Контент пакета</param>
-        public DataPacket(TransportHeader header, System.Collections.Generic.Dictionary<byte, object> data)
+        public DataPacket(TransportHeader header, System.Collections.Generic.Dictionary<object, object> data)
         {
             Header = header;
-            Data = data;
+            Data = Data = data.ToDictionary(k => (byte)k.Key, k => k.Value);
         }
 
+        public Dictionary<object, object> GetData() {
+
+            return Data.ToDictionary(k => (object)k.Key, k => k.Value);
+
+        }
     }
 
 }

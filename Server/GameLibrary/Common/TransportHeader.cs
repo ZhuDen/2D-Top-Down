@@ -29,10 +29,10 @@ namespace GameLibrary.Common
         /// <param name="operationCode">Ключ отправки сообщения</param>
         /// <param name="flag">Флаг получателя</param>
         /// <param name="rpc">Если установлен в True, содержимое пакета не будет отслеживаться сервером</param>
-        public TransportHeader(byte operationCode, SendClientFlag flag = SendClientFlag.Me, bool rpc = false)
+        public TransportHeader(object operationCode, SendClientFlag flag = SendClientFlag.Me, bool rpc = false)
         {
 
-            OperationCode = operationCode;
+            OperationCode = (byte)operationCode;
             Flag = flag;
             Rpc = rpc;
 

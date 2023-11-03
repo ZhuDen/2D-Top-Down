@@ -47,7 +47,7 @@ public class SynchronizeTransfrom : MonoBehaviour
 
     async void SendMess()
     {
-        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.MyTransform, new Dictionary<byte, object> { { (byte)ParameterCode.X, transform.position.x }, { (byte)ParameterCode.Y, transform.position.y }, { (byte)ParameterCode.Z, transform.eulerAngles.z }, { (byte)ParameterCode.Id, TransportHandler.Transport.Id } }, SendClientFlag.All));
+        await TransportHandler.Transport.SendTo(new DataPacket((byte)OperationCode.MyTransform, new Dictionary<object, object> { { (byte)ParameterCode.X, transform.position.x }, { (byte)ParameterCode.Y, transform.position.y }, { (byte)ParameterCode.Z, transform.eulerAngles.z }, { (byte)ParameterCode.Id, TransportHandler.Transport.Id } }, SendClientFlag.All));
     }
 
     private void OnGetPos(Vector3 pos, string _id)
