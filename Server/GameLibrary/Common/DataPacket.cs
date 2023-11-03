@@ -17,6 +17,7 @@ namespace GameLibrary.Common
     [KnownType(typeof(NetTransform))]
     [KnownType(typeof(Room))]
     [KnownType(typeof(List<TeamMember>))]
+    [KnownType(typeof(TransportHeader))]
     [KnownType(typeof(System.Byte[]))]
     public class DataPacket
     {
@@ -28,7 +29,17 @@ namespace GameLibrary.Common
         public GameLibrary.Common.SendClientFlag Flag { get; set; }
         [DataMember]
         public bool Rpc { get; set; }
+        [DataMember]
+        public TransportHeader Header = null;
 
+        /// <summary>
+        /// Пакет пересылки между клиентом и сервером
+        /// </summary>
+        /// <param name="sendParameters">Ключ отправки сообщения</param>
+        /// <param name="data">Контент пакета</param>
+        /// <param name="flag">Флаг получаетя пакета</param>
+        /// <param name="rpc">Если установлен в True, содержимое пакета не будет отслеживаться сервером</param>
+        /// <returns>Метода поддерживаетя, но устарел, используйте TransportHeader для конфигурирования параметров пакета</returns>
         public DataPacket(byte sendParameters, System.Collections.Generic.Dictionary<byte, object> data, SendClientFlag flag = SendClientFlag.Me, bool rpc = false)
         {
             Data = data;
@@ -37,6 +48,18 @@ namespace GameLibrary.Common
             Rpc = rpc;
         }
 
+        /// <summary>
+        /// Пакет пересылки между клиентом и сервером
+        /// </summary>
+        /// <param name="header">Заголовок отправляемог опакета, хранит параметры пакета</param>
+        /// <param name="data">Контент пакета</param>
+        public DataPacket(TransportHeader header, System.Collections.Generic.Dictionary<byte, object> data)
+        {
+            Header = header;
+            Data = data;
+        }
+
     }
+
 }
 

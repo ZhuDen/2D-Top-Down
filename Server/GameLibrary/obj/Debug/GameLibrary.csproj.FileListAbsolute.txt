@@ -31,4 +31,3 @@ D:\Unity Projects\2D-Top-Down\Server\GameLibrary\obj\Debug\GameLibrary.csproj.Co
 D:\Unity Projects\2D-Top-Down\Server\GameLibrary\obj\Debug\GameLibrary.dll
 D:\Unity Projects\2D-Top-Down\Assets\Plugins\Debug\GameLibrary.deps.json
 D:\Unity Projects\2D-Top-Down\Assets\Plugins\Debug\GameLibrary.dll
-D:\Unity Projects\2D-Top-Down\Server\GameLibrary\obj\Debug\GameLibrary.csproj.AssemblyReference.cache

@@ -369,6 +369,23 @@ public class CommandHandler
                             Logger.Log.Debug($"TeamSetTeamUUID{_client.TeamUUID}");
                             Logger.Log.Debug($"TeamSetMyUUID{_client.Id}");
                             Logger.Log.Debug("AddNewteam");
+
+                           /* //Способ Первый
+                            using (TransportHeader Header = new((byte)OperationCode.Unknown, SendClientFlag.Me, false))
+                            {
+                                await SendTo(new DataPacket(Header, new Dictionary<byte, object>
+                                        {
+                                            { (byte)ParameterCode.TeamUUID, World.Instance.Players[_client.Id].TeamUUID },
+                                            { (byte)ParameterCode.UUID, World.Instance.Rooms[_client.TeamUUID].GetTeamMember(_client.Id) }
+                                        }));
+                            }
+                            //Способ Второй
+                            await SendTo(new DataPacket(new TransportHeader((byte)OperationCode.Unknown, SendClientFlag.Me, true),
+                                new Dictionary<byte, object>{
+                                            { (byte)ParameterCode.TeamUUID, World.Instance.Players[_client.Id].TeamUUID },
+                                            { (byte)ParameterCode.UUID, World.Instance.Rooms[_client.TeamUUID].GetTeamMember(_client.Id) }
+                                    }));
+                           */
                             await SendTo(new DataPacket((byte)OperationCode.SetTeam, new Dictionary<byte, object>
                                         {
                                             { (byte)ParameterCode.TeamUUID, World.Instance.Players[_client.Id].TeamUUID },
@@ -554,6 +571,127 @@ public class CommandHandler
                     Logger.Log.Debug($"Error occurred while sending data: {ex.Message}");
                 }
                 break;
+        }
+
+    }
+    public async Task SendTo(DataPacket packet)
+    {
+        if (packet.Header != null)
+        switch (packet.Header.Flag)
+        {
+
+            case SendClientFlag.Me:
+
+                try
+                {
+                    var serializedPacket = await Serializer.SerializeAsync(packet);
+                    byte[] sizeBytes = BitConverter.GetBytes(serializedPacket.Length);
+                    byte[] buffer = sizeBytes.Concat(serializedPacket).ToArray();
+
+                    await _client.Socket.SendAsync(buffer, SocketFlags.None);
+                }
+                catch (SocketException ex)
+                {
+                    Logger.Log.Debug($"SocketException occurred while sending data: {ex.SocketErrorCode}");
+                }
+                catch (IOException ex)
+                {
+                    Logger.Log.Debug($"IOException occurred while sending data: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log.Debug($"Error occurred while sending data: {ex.Message}");
+                }
+                break;
+
+            case SendClientFlag.All:
+
+                try
+                {
+                    var serializedPacket = await Serializer.SerializeAsync(packet);
+                    byte[] sizeBytes = BitConverter.GetBytes(serializedPacket.Length);
+                    byte[] buffer = sizeBytes.Concat(serializedPacket).ToArray();
+
+                    foreach (NetClient client in World.Instance.AllWorldClients())
+                    {
+                        await client.Socket.SendAsync(buffer, SocketFlags.None);
+                    }
+
+                }
+                catch (SocketException ex)
+                {
+                    Logger.Log.Debug($"SocketException occurred while sending data: {ex.SocketErrorCode}");
+                }
+                catch (IOException ex)
+                {
+                    Logger.Log.Debug($"IOException occurred while sending data: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log.Debug($"Error occurred while sending data: {ex.Message}");
+                }
+                break;
+
+            case SendClientFlag.FullRoom:
+
+                try
+                {
+                    var serializedPacket = await Serializer.SerializeAsync(packet);
+                    byte[] sizeBytes = BitConverter.GetBytes(serializedPacket.Length);
+                    byte[] buffer = sizeBytes.Concat(serializedPacket).ToArray();
+
+                    foreach (TeamMember client in World.Instance.GetRoom(_client.TeamUUID).Team)
+                    {
+                        await client.netClient.Socket.SendAsync(buffer, SocketFlags.None);
+                    }
+
+                }
+                catch (SocketException ex)
+                {
+                    Logger.Log.Debug($"SocketException occurred while sending data: {ex.SocketErrorCode}");
+                }
+                catch (IOException ex)
+                {
+                    Logger.Log.Debug($"IOException occurred while sending data: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log.Debug($"Error occurred while sending data: {ex.Message}");
+                }
+                break;
+
+            case SendClientFlag.MyTeam:
+
+                try
+                {
+                    var serializedPacket = await Serializer.SerializeAsync(packet);
+                    byte[] sizeBytes = BitConverter.GetBytes(serializedPacket.Length);
+                    byte[] buffer = sizeBytes.Concat(serializedPacket).ToArray();
+
+                    foreach (TeamMember client in World.Instance.GetRoom(_client.TeamUUID).Team)
+                    {
+                        if (client.Team == _client.Team)
+                            await client.netClient.Socket.SendAsync(buffer, SocketFlags.None);
+                    }
+
+                }
+                catch (SocketException ex)
+                {
+                    Logger.Log.Debug($"SocketException occurred while sending data: {ex.SocketErrorCode}");
+                }
+                catch (IOException ex)
+                {
+                    Logger.Log.Debug($"IOException occurred while sending data: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log.Debug($"Error occurred while sending data: {ex.Message}");
+                }
+                break;
+        }
+        else
+        {
+            Logger.Log.Error("В пакете отсутствует Header");
         }
 
     }
