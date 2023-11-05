@@ -391,8 +391,8 @@ public class CommandHandler
                             Logger.Log.Debug($"TeamSetMyUUID{_client.Id}");
                             Logger.Log.Debug("AddNewteam");
 
-                           /* //Способ Первый
-                            using (TransportHeader Header = new((byte)OperationCode.Unknown, SendClientFlag.Me, false))
+                         /*   //Способ Первый
+                            using (TransportHeader Header = new(OperationCode.Unknown, SendClientFlag.Me, false))
                             {
                                 await SendTo(new DataPacket(Header, new Dictionary<object, object>
                                         {
@@ -628,7 +628,40 @@ public class CommandHandler
                 }
                 break;
 
-            case SendClientFlag.All:
+                case SendClientFlag.Personal:
+
+                    try
+                    {
+                        var serializedPacket = await Serializer.SerializeAsync(packet);
+                        byte[] sizeBytes = BitConverter.GetBytes(serializedPacket.Length);
+                        byte[] buffer = sizeBytes.Concat(serializedPacket).ToArray();
+                        NetClient ClientBuffer = new NetClient();
+                        try
+                        {
+                            ClientBuffer = World.Instance.getClient(packet.Header.IdPlayer);
+
+                            await ClientBuffer.Socket.SendAsync(buffer, SocketFlags.None);
+                        }catch (SocketException ex)
+                        {
+
+                            Logger.Log.Error($"Client Not Found");
+                        }
+                    }
+                    catch (SocketException ex)
+                    {
+                        Logger.Log.Debug($"SocketException occurred while sending data: {ex.SocketErrorCode}");
+                    }
+                    catch (IOException ex)
+                    {
+                        Logger.Log.Debug($"IOException occurred while sending data: {ex.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log.Debug($"Error occurred while sending data: {ex.Message}");
+                    }
+                    break;
+
+                case SendClientFlag.All:
 
                 try
                 {

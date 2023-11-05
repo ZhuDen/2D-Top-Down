@@ -20,8 +20,10 @@ namespace GameLibrary.Common
         public SendClientFlag Flag = SendClientFlag.Me;
         [DataMember]
         public bool Rpc = false;
-        //[DataMember]
-        //public string ?UUID = null;
+        [DataMember]
+        public string ?UUID = null;
+        [DataMember]
+        public string ?IdPlayer = null;
 
         /// <summary>
         /// Заголовок транспортного пакета

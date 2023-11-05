@@ -12,5 +12,6 @@ namespace GameLibrary.Common
         Me,
         FullRoom,
         MyTeam,
+        Personal,
     }
 }
