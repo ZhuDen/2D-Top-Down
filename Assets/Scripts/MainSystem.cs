@@ -69,7 +69,7 @@ public class MainSystem : MonoBehaviour
     }
     private async Task _authorisation( string Login, string Pass)
     {
-        using (TransportHeader Header = new((byte)OperationCode.Authorisation, SendClientFlag.Me, false))
+        using (TransportHeader Header = new TransportHeader (OperationCode.Authorisation, SendClientFlag.Me, false))
         {
             await TransportHandler.Transport.SendTo(new DataPacket(Header, new Dictionary<object, object> { { (byte)ParameterCode.Login, Login }, { (byte)ParameterCode.Password, Pass } }));
         }

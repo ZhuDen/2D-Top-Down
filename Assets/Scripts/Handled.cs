@@ -29,7 +29,7 @@ public static class Handled
     public delegate void UpdateNick(string _res, string id);
     public static event UpdateNick OnUpdateNick;
 
-    public delegate void SpawnSkill(string _typeSkill, string id);
+    public delegate void SpawnSkill(string _typeSkill, string _id, string _nameSkill, string _damage, string mousePos);
     public static event SpawnSkill OnSpawnSkill;
 
     public delegate void GetPlayers(List<TeamMember> _players);
@@ -218,7 +218,13 @@ public static class Handled
             }
             if (packet.Data.ContainsKey((byte)MyParameters.UseSkill))
             {
-                MainSystem.instance.doMainThread(() => OnSpawnSkill?.Invoke(packet.Data[(byte)MyParameters.UseSkill].ToString(), packet.Data[(byte)ParameterCode.Id].ToString()));
+                MainSystem.instance.doMainThread(() => OnSpawnSkill?.Invoke(
+                                   packet.Data[(byte)MyParameters.UseSkill].ToString(),
+                                   packet.Data[(byte)ParameterCode.Id].ToString(),
+                                   packet.Data[(byte)MyParameters.NameSkill].ToString(),
+                                   packet.Data[(byte)MyParameters.Damage].ToString(),
+                                   packet.Data[(byte)MyParameters.MousePos].ToString()
+                                   ));
             }
 
             // Debug.Log($"RPC REQUEST: { packet.Data.Keys}");

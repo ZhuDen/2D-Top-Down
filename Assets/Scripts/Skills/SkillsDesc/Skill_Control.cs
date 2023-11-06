@@ -1,3 +1,5 @@
+using GameLibrary.Common;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -142,24 +144,39 @@ public class Skill_Control : MonoBehaviour
             MyPlayerControl.playerStats.UpdateMana(skillsParameters.NeedMana, PlayerStats.TypeSummation.Minus);
         }
 
-       /* if (TypeSkill == TypeSkills.AmedByPoint)
-        {
-            MyPlayerControl.playerAnimatorControl.SetElectricSkill();
-            Vector2 posMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            GameObject skill = Instantiate(PrefabSkillGM, MyPlayerControl.SpawnSkills.position, PrefabSkillGM.transform.rotation);
-            skill.GetComponent<MoveAndExplosion>().StartMove(new Vector3(posMouse.x, posMouse.y, 0), Random.Range(skillsParameters.DamageMin, skillsParameters.DamageMax));
-        }
-        if(TypeSkill == TypeSkills.NonDirectional)
-        {
-            GameObject skill = Instantiate(PrefabSkillGM, MyPlayerControl.transform.position, PrefabSkillGM.transform.rotation);
-            MyPlayerControl.transform.position = new Vector3(MyPlayerControl.transform.position.x + Random.Range(-8f, 8f), MyPlayerControl.transform.position.y + Random.Range(-8f, 8f), 0);
-        }*/
+        /* if (TypeSkill == TypeSkills.AmedByPoint)
+         {
+             MyPlayerControl.playerAnimatorControl.SetElectricSkill();
+             Vector2 posMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+             GameObject skill = Instantiate(PrefabSkillGM, MyPlayerControl.SpawnSkills.position, PrefabSkillGM.transform.rotation);
+             skill.GetComponent<MoveAndExplosion>().StartMove(new Vector3(posMouse.x, posMouse.y, 0), Random.Range(skillsParameters.DamageMin, skillsParameters.DamageMax));
+         }
+         if(TypeSkill == TypeSkills.NonDirectional)
+         {
+             GameObject skill = Instantiate(PrefabSkillGM, MyPlayerControl.transform.position, PrefabSkillGM.transform.rotation);
+             MyPlayerControl.transform.position = new Vector3(MyPlayerControl.transform.position.x + Random.Range(-8f, 8f), MyPlayerControl.transform.position.y + Random.Range(-8f, 8f), 0);
+         }*/
+        SendUseSkill();
         StartReload();
+    }
+
+    async void SendUseSkill()
+    {
+        Vector2 posMouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        await TransportHandler.Transport.SendTo(new DataPacket(OperationCode.Message, new Dictionary<object, object> {
+            { MyParameters.UseSkill, TypeSkill.ToString() },
+            { ParameterCode.Id, TransportHandler.Transport.Id },
+            { MyParameters.NameSkill, NameSkill.ToString() },
+            { MyParameters.Damage, Random.Range(skillsParameters.DamageMin, skillsParameters.DamageMax).ToString() },
+            { MyParameters.MousePos, posMouse.x + "|" + posMouse.y } }, 
+            SendClientFlag.All, true));
     }
 
     private void OnDeselectSkill()
     {
         SelectImage.enabled = false;
     }
+    
 
 }

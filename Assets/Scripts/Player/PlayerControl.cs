@@ -101,4 +101,15 @@ public class PlayerControl : MonoBehaviour
         float angle = Mathf.Atan2(MousePos.y, MousePos.x) * Mathf.Rad2Deg;
         PlayerTransform.rotation = Quaternion.Lerp(PlayerTransform.rotation, Quaternion.Euler(new Vector3(0, 0, angle)), SpeedRotate * Time.deltaTime);
     }
+
+    public void SetDamage (int _damage, string _playerEnemyId)
+    {
+        if (isMinePlayer.IsMine())
+        {
+            if (isMinePlayer.ID != _playerEnemyId)
+            {
+                playerStats.UpdateHP(_damage, PlayerStats.TypeSummation.Minus);
+            }
+        }
+    }
 }

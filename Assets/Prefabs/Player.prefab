@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 3915316542479352670}
   - component: {fileID: 6298846067959392203}
   - component: {fileID: 6783696817611905913}
-  - component: {fileID: 1153925043}
+  - component: {fileID: 4562558485195045609}
   m_Layer: 0
   m_Name: CanvasInfo
   m_TagString: Untagged
@@ -180,7 +180,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &1153925043
+--- !u!114 &4562558485195045609
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -363,6 +363,9 @@ GameObject:
   - component: {fileID: 8799136869962161289}
   - component: {fileID: 6414819713455222253}
   - component: {fileID: 2799645602318333275}
+  - component: {fileID: 1153925044}
+  - component: {fileID: 1153925043}
+  - component: {fileID: 4836179900876430137}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -388,7 +391,7 @@ Transform:
   - {fileID: 8799136870108350357}
   - {fileID: 80207571123646056}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!114 &8799136869962161294
 MonoBehaviour:
@@ -489,12 +492,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MyPlayerControl: {fileID: 8799136869962161294}
   AllSkills:
-  - SkillName: ElectricBall
+  - NameSkill: 1
     PrefabsSkills: {fileID: 7839459750025855479, guid: 9858df66a09a67d4d90db31e9fff1758, type: 3}
-  - SkillName: FireBall
+  - NameSkill: 2
     PrefabsSkills: {fileID: 8734062140575209383, guid: b17fd651dc9e06544b317dffa8e192e0, type: 3}
-  - SkillName: SmokeBlink
+  - NameSkill: 3
     PrefabsSkills: {fileID: 5046280036631044564, guid: 1708e22464bf77349933e7c8e23e2553, type: 3}
+--- !u!58 &1153925044
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8799136869962161329}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.19
+--- !u!50 &1153925043
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8799136869962161329}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 1
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
+--- !u!114 &4836179900876430137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8799136869962161329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaddc5d33e2171547bd924523b53eca8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MyTag: 1
 --- !u!1 &8799136870108350358
 GameObject:
   m_ObjectHideFlags: 0

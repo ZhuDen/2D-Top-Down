@@ -9,6 +9,7 @@ public class MoveAndExplosion : MonoBehaviour
     public float SpeedMove, ExplosionDistance;
     public bool IsMove;
     public int Damage;
+    public string PlayerID;
 
     private void Update()
     {
@@ -26,16 +27,17 @@ public class MoveAndExplosion : MonoBehaviour
         }
     }
 
-    public void StartMove (Vector3 _endPoint, int _damageSkill)
+    public void StartMove (Vector3 _endPoint, int _damageSkill, string _playerID)
     {
         IsMove = true;
         MoveToPoint = _endPoint;
         Damage = _damageSkill;
+        PlayerID = _playerID;
     }
 
 
     public void SpawnExplosion ()
     {
-        Instantiate(ExplosionGM, transform.position, ExplosionGM.transform.rotation).GetComponent<TriggerSkillDamage>().SetDataDamage(Damage);
+        Instantiate(ExplosionGM, transform.position, ExplosionGM.transform.rotation).GetComponent<TriggerSkillDamage>().SetDataDamage(Damage, PlayerID);
     }
 }
