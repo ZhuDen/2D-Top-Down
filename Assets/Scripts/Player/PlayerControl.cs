@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     public GameObject[] MySkills;
-    public Transform PlayerTransform, CameraTransform, SpawnSkills;
+    public Transform PlayerTransform, PlayerFollowTrans, CameraTransform, SpawnSkills;
     public float SpeedRotate, SpeedMove, SpeedCamera;
 
     private Vector3 MousePos;
@@ -18,17 +18,21 @@ public class PlayerControl : MonoBehaviour
     public PlayerAnimatorControl playerAnimatorControl;
     public PlayerStats playerStats;
     public IsMinePlayer isMinePlayer;
+    public Vector3 MyPositionNew, MyPositionOld;
+    public float Vertical, Horizontal;
 
-  /*  private void Awake()
-    {
-        CameraTransform = Camera.main.transform;
-        PlayerTransform = this.transform;
-    }
+    /*  private void Awake()
+      {
+          CameraTransform = Camera.main.transform;
+          PlayerTransform = this.transform;
+      }
+      */
 
     private void Start()
     {
-        UISpawner.Instance.SpawnSkills(MySkills);
-    }*/
+        MyPositionNew = transform.position;
+        // PlayerFollowTrans.SetParent(null);
+    }
 
     private void OnEnable()
     {
@@ -82,8 +86,8 @@ public class PlayerControl : MonoBehaviour
 
     public void MovePlayer ()
     {
-        PlayerTransform.position += Vector3.up * Input.GetAxisRaw("Vertical") * SpeedMove * Time.deltaTime;
-        PlayerTransform.position += Vector3.right * Input.GetAxisRaw("Horizontal") * SpeedMove * Time.deltaTime;
+        Vertical = Input.GetAxisRaw("Vertical");
+        Horizontal = Input.GetAxisRaw("Horizontal");
 
         playerAnimatorControl.SetWalk((int)Input.GetAxisRaw("Vertical"));
 

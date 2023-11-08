@@ -14,6 +14,9 @@ public static class Handled
     public delegate void GetMessage(Vector3 pos, string id);
     public static event GetMessage OnGetMessage;
 
+    public delegate void GetMessageAxis(string messageAxis, string id);
+    public static event GetMessageAxis OnGetMessageAxis;
+
     public delegate void GetString(string _res, string id);
     public static event GetString OnGetString;
 
@@ -132,13 +135,10 @@ public static class Handled
                 case OperationCode.Message:
                     if (packet.Data != null)
                     {
-                        Debug.Log("11111");
                         if (packet.Data.ContainsKey((byte)MyParameters.Ping))
                         {
-                            Debug.Log("2222");
                             if (packet.Data[(byte)MyParameters.Ping].ToString() == "Ping")
                             {
-                                Debug.Log("3333");
                                 MainSystem.instance.doMainThread(() => GameManager.Instance.UpdatePing());
                             }
                         }
@@ -213,7 +213,6 @@ public static class Handled
             }
             if (packet.Data.ContainsKey((byte)MyParameters.NickName))
             {
-               // Debug.Log("Nick: " + packet.Data[(byte)MyParameters.NickName].ToString());
                 MainSystem.instance.doMainThread(() => OnUpdateNick?.Invoke(packet.Data[(byte)MyParameters.NickName].ToString(), packet.Data[(byte)ParameterCode.Id].ToString()));
             }
             if (packet.Data.ContainsKey((byte)MyParameters.UseSkill))
@@ -226,7 +225,10 @@ public static class Handled
                                    packet.Data[(byte)MyParameters.MousePos].ToString()
                                    ));
             }
-
+            if (packet.Data.ContainsKey((byte)MyParameters.ControlAxis))
+            {
+                MainSystem.instance.doMainThread(() => OnGetMessageAxis?.Invoke(packet.Data[(byte)MyParameters.ControlAxis].ToString(), packet.Data[(byte)ParameterCode.Id].ToString()));
+            }
             // Debug.Log($"RPC REQUEST: { packet.Data.Keys}");
 
         }

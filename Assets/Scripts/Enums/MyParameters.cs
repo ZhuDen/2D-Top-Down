@@ -14,6 +14,8 @@ using System.Text;
         NameSkill = 105,
         Damage = 106,
         MousePos = 107,
-        StatsHP = 108
+        StatsHP = 108,
+        Axis = 109,
+        ControlAxis = 110
     }
 
